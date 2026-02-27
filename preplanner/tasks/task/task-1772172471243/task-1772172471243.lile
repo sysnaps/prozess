@@ -1,0 +1,25 @@
+{
+  "iddress": [
+    "tasks",
+    ".task",
+    ".task-1772172471243"
+  ],
+  "cap": "task",
+  "task": "task-1772172471243",
+  "task-1772172471243": {
+    "description": "we need a save button for the floats on the top right\ncontrol-enter should add a new step to the floater! \nok i got it: \nthe hierarchy is\nseas>ponds>buckets>goals>tasks>smurfs>steps>instructions right?\nso when we enter the title of the seas and hit enter then the steps are ponds! and with control enter do we add a new pond to that list and to the left of each step inside the floater we have a \"float\" button. no text but a ricon  maybe this one? 🫧 no wait emojis cant get greyed out... or can they ? oh i dont know that. if they can we use emojis if not then not. and when we float that step then it appears as float in the center as well (only when we have ponds selected to show) and clicking on that float then we type buckets for this pond! oh and i think every plan level has its own \"new\" button to the right of the tab. \nOh and can we have a different font please?",
+    "ratings": {
+      "difficulty": 3,
+      "importance": 8,
+      "realisierbarkeit": 10,
+      "energy.consumption": 1,
+      "probability": 8,
+      "urgency": 8,
+      "step.order": 1
+    }
+  },
+  "time": {
+    "created": 1772172933309,
+    "modified": 1772172933309
+  }
+}

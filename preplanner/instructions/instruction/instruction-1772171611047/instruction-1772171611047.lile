@@ -1,0 +1,17 @@
+{
+  "iddress": [
+    "instructions",
+    ".instruction",
+    ".instruction-1772171611047"
+  ],
+  "cap": "instruction",
+  "instruction": "instruction-1772171611047",
+  "instruction-1772171611047": {
+    "description": "the ratings are now a text field. i did like the previous way we selected. the bar on the right is now broken . the ui looks weird and it does nothing. the floater could be a bit wider. and what would be cool is if that textfield here would grow in size with every new line. by the height of the new line and how about also a tiny bit more in width with every new line. so - wider in general and also getting wider. then how about for the planarchy we can multi select the levels and deselect by clicking on them again when they are active. then I also seem to not see a way to connect different floaters. and instructions should be at the bottom and seas at the top and how about we add a float that lets us create our own ratings. simply entering what we want to rate so no pre build rating options just what the user wants to rate stuff with. and the butotn for that float is on the right side ",
+    "ratings": ""
+  },
+  "time": {
+    "created": 1772172057713,
+    "modified": 1772172057713
+  }
+}

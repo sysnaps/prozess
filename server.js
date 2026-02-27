@@ -4,7 +4,7 @@ var path = require('path')
 var crypto = require('crypto')
 var verfassung = require('./verfassung/verfassung_handlers')
 
-var PORT = 3000
+var PORT = process.env.PORT || 3000
 
 // ════════════════════════════════════════════
 // PROZESS — the databrains server
@@ -232,7 +232,15 @@ function handleAuth(data) {
 // ════════════════════════════════════════════
 // WEBSOCKET SERVER
 // ════════════════════════════════════════════
-var wss = new WebSocket.Server({ port: PORT })
+var http = require('http')
+var server = http.createServer(function (req, res) {
+    res.writeHead(200, { 'Content-Type': 'text/plain' })
+    res.end('prozess alive')
+})
+var wss = new WebSocket.Server({ server: server })
+server.listen(PORT, function () {
+    console.log('prozess: listening on port ' + PORT)
+})
 
 // ════════════════════════════════════════════
 // PRESENCE TRACKING
@@ -272,9 +280,7 @@ function broadcastToOthers(senderWs, eventType, eventData) {
     })
 }
 
-wss.on('listening', function () {
-    console.log('prozess: listening on port ' + PORT)
-})
+
 
 wss.on('connection', function (ws) {
     var thisId = ++clientId
