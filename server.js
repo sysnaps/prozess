@@ -3,8 +3,13 @@ var fs = require('fs')
 var path = require('path')
 var crypto = require('crypto')
 var verfassung = require('./verfassung/verfassung_handlers')
+var irl = require('./irl_handlers')
 
 var PORT = process.env.PORT || 3000
+var PROZESS_ROOT = path.join(__dirname)
+
+// initialize I.R.L. directory structure
+irl.init()
 
 // ════════════════════════════════════════════
 // PROZESS — the databrains server
@@ -445,6 +450,67 @@ wss.on('connection', function (ws) {
 
                 case 'preplanner.delete':
                     response.data = verfassung.handleDelete(data)
+                    break
+
+                // ════════════════════════════════════
+                // I.R.L. HANDLERS
+                // ════════════════════════════════════
+                case 'irl.signup':
+                    try {
+                        response.data = irl.handleSignUp(data)
+                    } catch (e) {
+                        response.error = e.message
+                    }
+                    break
+
+                case 'irl.signin':
+                    try {
+                        response.data = irl.handleSignIn(data)
+                        if (clientInfo) clientInfo.actor = data.name
+                        broadcastPresence()
+                    } catch (e) {
+                        response.error = e.message
+                    }
+                    break
+
+                case 'irl.ship.save':
+                    try {
+                        response.data = irl.handleShipSave(data)
+                    } catch (e) {
+                        response.error = e.message
+                    }
+                    break
+
+                case 'irl.ship.load':
+                    try {
+                        response.data = irl.handleShipLoad(data)
+                    } catch (e) {
+                        response.error = e.message
+                    }
+                    break
+
+                case 'irl.ship.list':
+                    try {
+                        response.data = irl.handleShipList(data)
+                    } catch (e) {
+                        response.error = e.message
+                    }
+                    break
+
+                case 'irl.fassung.save':
+                    try {
+                        response.data = irl.handleFassungSave(data)
+                    } catch (e) {
+                        response.error = e.message
+                    }
+                    break
+
+                case 'irl.fassung.list':
+                    try {
+                        response.data = irl.handleFassungList(data)
+                    } catch (e) {
+                        response.error = e.message
+                    }
                     break
 
                 case 'presence.status':
