@@ -1,0 +1,88 @@
+{
+    "iddress": "vreen.@not-logged-in",
+    "props": {
+        "kind": "window.main",
+        "cap": "elob",
+        "label": "Main Window",
+        "is": "div",
+        "style": "(style)",
+        "children": [
+            "bars.fab.ci",
+            "bars.sab.ci",
+            "areas.center.ci",
+            "bars.interactive.ci"
+        ]
+    },
+    "get": {
+        "flare": [],
+        "kind": "rune",
+        "magazine": [],
+        "arguments": [
+            "$route",
+            "$vane",
+            "$body",
+            "$dream"
+        ],
+        "impact": [],
+        "aftermath": []
+    },
+    "ball": {
+        "cap": "island",
+        "kind": "vaporizer",
+        "type": "ball",
+        "print": null,
+        "dream": {},
+        "backdoor": {},
+        "registry": {},
+        "flesh": {},
+        "tunnel": {},
+        "subscribers": {
+            "takes": "any"
+        },
+        "items": [
+            "here come full shots!"
+        ],
+        "units": [
+            {
+                "unit": "lee",
+                "lee": [
+                    "increment"
+                ],
+                "arguments": [
+                    "$target",
+                    "$value"
+                ],
+                "increment": [
+                    "$target",
+                    "$value"
+                ],
+                "becomes": "(target,value) => target += value",
+                "call": "lee.increment(target,value)",
+                "question": "where is target and value coming from in javascript?"
+            },
+            {
+                "unit": "lee"
+            },
+            {
+                "unit": "lee",
+                "lee": "split",
+                "arguments": [
+                    "$delimiter",
+                    "$string"
+                ],
+                "split": [
+                    "$string",
+                    "$delimiter"
+                ],
+                "becomes": "(delimiter,string) => string.split(delimiter)",
+                "call": "cap.split(delimiter,string)"
+            },
+            {
+                "unit": "lee",
+                "lee": "attach",
+                "attach": "",
+                "becomes": "(lee,cap)=> cap[lee[lee]] = lee"
+            }
+        ]
+    }
+}

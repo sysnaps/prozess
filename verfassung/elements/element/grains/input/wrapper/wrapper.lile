@@ -1,0 +1,9 @@
+{
+    "body": {
+        "style": {
+            "display": "flex",
+            "gap": 10,
+            "alignItems": "center"
+        }
+    }
+}

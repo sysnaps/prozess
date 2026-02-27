@@ -1,0 +1,7 @@
+{
+    "cap": "elob",
+    "kind": "card",
+    "iddress": "ci.cards.slidedown",
+    "label": "Slidedown",
+    "default": "ci.cards.slidedown.@verfassung"
+}

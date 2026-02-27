@@ -1,0 +1,12 @@
+{
+    "body": {
+        "style": {
+            "padding": "0 3px",
+            "fontSize": 11,
+            "fontWeight": 400,
+            "color": "var(--text-secondary)",
+            "opacity": 0.5,
+            "userSelect": "none"
+        }
+    }
+}

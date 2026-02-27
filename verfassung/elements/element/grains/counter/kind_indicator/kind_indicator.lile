@@ -1,0 +1,22 @@
+{
+    "body": {
+        "style": {
+            "count": {
+                "symbol": "⋮",
+                "color": "var(--text-secondary)"
+            },
+            "sum": {
+                "symbol": "∑",
+                "color": "var(--accent)"
+            },
+            "mass": {
+                "symbol": "⊞",
+                "color": "var(--success)"
+            },
+            "coda": {
+                "symbol": "♮",
+                "color": "var(--danger)"
+            }
+        }
+    }
+}

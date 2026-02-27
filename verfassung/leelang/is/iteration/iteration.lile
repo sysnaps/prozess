@@ -1,0 +1,36 @@
+{
+    "iddress": [
+        "leelang",
+        "is",
+        "iteration"
+    ],
+    "cap": "lee",
+    "lee": [
+        "is",
+        "iteration"
+    ],
+    "arguments": [
+        "$string"
+    ],
+    "forms": {
+        "object": {
+            "unit": "lee",
+            "lee": [
+                "is",
+                "iteration"
+            ],
+            "arguments": [
+                "$string"
+            ],
+            "iteration": [
+                "$string"
+            ]
+        },
+        "array": [
+            "lee",
+            "is",
+            "iteration",
+            "$string"
+        ]
+    }
+}

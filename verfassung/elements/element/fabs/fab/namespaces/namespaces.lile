@@ -1,0 +1,7 @@
+{
+    "cap": "elob",
+    "kind": "namespaces",
+    "iddress": "fabs.namespaces",
+    "label": "namespaces",
+    "default": "fabs.namespaces.@verfassung"
+}

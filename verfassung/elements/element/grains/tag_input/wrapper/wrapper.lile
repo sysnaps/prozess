@@ -1,0 +1,9 @@
+{
+    "body": {
+        "style": {
+            "display": "flex",
+            "flexDirection": "column",
+            "gap": 4
+        }
+    }
+}

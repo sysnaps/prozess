@@ -1,0 +1,7 @@
+{
+    "cap": "print",
+    "kind": "icons",
+    "iddress": "ci.icons.icons",
+    "label": "Icons",
+    "default": "ci.icons.icons.@verfassung"
+}

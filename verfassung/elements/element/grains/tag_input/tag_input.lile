@@ -1,0 +1,7 @@
+{
+    "cap": "elob",
+    "kind": "grain",
+    "iddress": "ci.grains.tag_input",
+    "label": "TagInput",
+    "default": "ci.grains.tag_input.@verfassung"
+}

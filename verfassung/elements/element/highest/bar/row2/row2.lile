@@ -1,0 +1,13 @@
+{
+    "body": {
+        "style": {
+            "display": "grid",
+            "alignItems": "center",
+            "padding": 0,
+            "background": "var(--lister-header-bg)",
+            "borderBottom": "2px solid var(--lister-border)",
+            "minHeight": 26,
+            "flexShrink": 0
+        }
+    }
+}

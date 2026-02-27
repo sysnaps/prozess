@@ -1,0 +1,7 @@
+{
+    "cap": "elob",
+    "kind": "highest",
+    "iddress": "ci.highest.bar",
+    "label": "HighestBar",
+    "default": "ci.highest.bar.@verfassung"
+}

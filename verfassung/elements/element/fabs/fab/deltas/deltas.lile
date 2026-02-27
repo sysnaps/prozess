@@ -1,0 +1,7 @@
+{
+    "cap": "elob",
+    "kind": "deltas",
+    "iddress": "fabs.deltas",
+    "label": "deltas",
+    "default": "fabs.deltas.@verfassung"
+}

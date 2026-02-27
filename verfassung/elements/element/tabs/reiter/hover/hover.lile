@@ -1,0 +1,8 @@
+{
+    "body": {
+        "style": {
+            "color": "var(--text-primary)",
+            "borderBottomColor": "var(--border)"
+        }
+    }
+}

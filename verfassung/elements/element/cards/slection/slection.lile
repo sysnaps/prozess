@@ -1,0 +1,7 @@
+{
+    "cap": "elob",
+    "kind": "card",
+    "iddress": "ci.cards.slection",
+    "label": "Slection",
+    "default": "ci.cards.slection.@verfassung"
+}

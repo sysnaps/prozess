@@ -1,0 +1,7 @@
+{
+    "cap": "elob",
+    "kind": "highest.grain",
+    "iddress": "ci.highest.soob.soob",
+    "label": "Soob",
+    "default": "ci.highest.soob.soob.@verfassung"
+}

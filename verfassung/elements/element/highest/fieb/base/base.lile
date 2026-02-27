@@ -1,0 +1,17 @@
+{
+    "body": {
+        "style": {
+            "display": "flex",
+            "alignItems": "center",
+            "gap": 3,
+            "padding": "1px 6px",
+            "background": "var(--bg-secondary)",
+            "border": "1px solid var(--border)",
+            "borderRadius": 3,
+            "color": "var(--text-secondary)",
+            "fontSize": 10,
+            "cursor": "pointer",
+            "transition": "background 0.1s"
+        }
+    }
+}

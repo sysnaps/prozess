@@ -1,0 +1,29 @@
+{
+    "iddress": [
+        "leelang",
+        "empty",
+        "array"
+    ],
+    "cap": "lee",
+    "lee": [
+        "empty",
+        "array"
+    ],
+    "arguments": [],
+    "forms": {
+        "object": {
+            "unit": "lee",
+            "lee": [
+                "empty",
+                "array"
+            ],
+            "arguments": [],
+            "array": []
+        },
+        "array": [
+            "lee",
+            "empty",
+            "array"
+        ]
+    }
+}

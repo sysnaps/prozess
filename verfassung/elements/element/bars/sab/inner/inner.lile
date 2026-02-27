@@ -1,0 +1,8 @@
+{
+    "body": {
+        "style": {
+            "display": "flex",
+            "gap": "8px"
+        }
+    }
+}

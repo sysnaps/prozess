@@ -1,0 +1,40 @@
+{
+    "iddress": [
+        "leelang",
+        "not",
+        "equals"
+    ],
+    "cap": "lee",
+    "lee": [
+        "not",
+        "equals"
+    ],
+    "arguments": [
+        "$a",
+        "$b"
+    ],
+    "forms": {
+        "object": {
+            "unit": "lee",
+            "lee": [
+                "not",
+                "equals"
+            ],
+            "arguments": [
+                "$a",
+                "$b"
+            ],
+            "equals": [
+                "$a",
+                "$b"
+            ]
+        },
+        "array": [
+            "lee",
+            "not",
+            "equals",
+            "$a",
+            "$b"
+        ]
+    }
+}

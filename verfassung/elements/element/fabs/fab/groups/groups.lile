@@ -1,0 +1,7 @@
+{
+    "cap": "elob",
+    "kind": "groups",
+    "iddress": "fabs.groups",
+    "label": "groups",
+    "default": "fabs.groups.@verfassung"
+}

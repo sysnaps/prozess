@@ -1,0 +1,36 @@
+{
+    "iddress": [
+        "leelang",
+        "divide"
+    ],
+    "cap": "lee",
+    "lee": [
+        "divide"
+    ],
+    "arguments": [
+        "$a",
+        "$b"
+    ],
+    "forms": {
+        "object": {
+            "unit": "lee",
+            "lee": [
+                "divide"
+            ],
+            "arguments": [
+                "$a",
+                "$b"
+            ],
+            "divide": [
+                "$a",
+                "$b"
+            ]
+        },
+        "array": [
+            "lee",
+            "divide",
+            "$a",
+            "$b"
+        ]
+    }
+}

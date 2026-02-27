@@ -1,0 +1,14 @@
+{
+    "body": {
+        "style": {
+            "display": "flex",
+            "alignItems": "center",
+            "justifyContent": "center",
+            "flex": 1,
+            "color": "var(--text-secondary)",
+            "fontSize": 13,
+            "fontStyle": "italic",
+            "padding": 24
+        }
+    }
+}

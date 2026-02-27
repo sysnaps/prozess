@@ -1,0 +1,40 @@
+{
+    "iddress": [
+        "leelang",
+        "for",
+        "each"
+    ],
+    "cap": "lee",
+    "lee": [
+        "for",
+        "each"
+    ],
+    "arguments": [
+        "$array",
+        "$fn"
+    ],
+    "forms": {
+        "object": {
+            "unit": "lee",
+            "lee": [
+                "for",
+                "each"
+            ],
+            "arguments": [
+                "$array",
+                "$fn"
+            ],
+            "each": [
+                "$array",
+                "$fn"
+            ]
+        },
+        "array": [
+            "lee",
+            "for",
+            "each",
+            "$array",
+            "$fn"
+        ]
+    }
+}

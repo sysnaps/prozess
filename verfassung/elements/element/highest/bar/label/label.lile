@@ -1,0 +1,11 @@
+{
+    "body": {
+        "style": {
+            "fontSize": 12,
+            "fontWeight": 700,
+            "color": "var(--text-primary)",
+            "letterSpacing": "0.3px",
+            "whiteSpace": "nowrap"
+        }
+    }
+}

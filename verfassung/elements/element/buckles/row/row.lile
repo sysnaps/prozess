@@ -1,0 +1,10 @@
+{
+    "body": {
+        "style": {
+            "display": "flex",
+            "flexDirection": "row",
+            "gap": 8,
+            "alignItems": "center"
+        }
+    }
+}

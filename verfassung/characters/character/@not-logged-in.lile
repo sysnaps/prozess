@@ -1,0 +1,13 @@
+{
+    "iddress": [
+        "characters",
+        ".@not-logged-in"
+    ],
+    "@not-logged-in": {
+        "body": {},
+        "end": {
+            "arguments": [],
+            "units": []
+        }
+    }
+}

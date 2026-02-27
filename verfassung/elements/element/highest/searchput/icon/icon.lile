@@ -1,0 +1,10 @@
+{
+    "body": {
+        "style": {
+            "fontSize": 11,
+            "color": "var(--text-secondary)",
+            "flexShrink": 0,
+            "userSelect": "none"
+        }
+    }
+}

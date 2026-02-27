@@ -1,0 +1,18 @@
+{
+    "cap": "fassung",
+    "fassung": "elements",
+    "elements": {
+        "body": {
+            "cap": "print",
+            "toqe": "!toqe",
+            "print": "element",
+            "style": [
+                "styles"
+            ],
+            "elements": [],
+            "ball": "+ball",
+            "collection": "element",
+            "element": []
+        }
+    }
+}

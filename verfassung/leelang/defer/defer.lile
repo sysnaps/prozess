@@ -1,0 +1,32 @@
+{
+    "iddress": [
+        "leelang",
+        "defer"
+    ],
+    "cap": "lee",
+    "lee": [
+        "defer"
+    ],
+    "arguments": [
+        "$fn"
+    ],
+    "forms": {
+        "object": {
+            "unit": "lee",
+            "lee": [
+                "defer"
+            ],
+            "arguments": [
+                "$fn"
+            ],
+            "defer": [
+                "$fn"
+            ]
+        },
+        "array": [
+            "lee",
+            "defer",
+            "$fn"
+        ]
+    }
+}

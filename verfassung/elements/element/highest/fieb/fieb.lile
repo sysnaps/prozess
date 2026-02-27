@@ -1,0 +1,7 @@
+{
+    "cap": "elob",
+    "kind": "highest.grain",
+    "iddress": "ci.highest.fieb",
+    "label": "Fieb",
+    "default": "ci.highest.fieb.@verfassung"
+}

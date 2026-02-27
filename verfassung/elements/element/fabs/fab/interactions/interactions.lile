@@ -1,0 +1,7 @@
+{
+    "cap": "elob",
+    "kind": "interactions",
+    "iddress": "fabs.interactions",
+    "label": "interactions",
+    "default": "fabs.interactions.@verfassung"
+}

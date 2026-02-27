@@ -1,0 +1,7 @@
+{
+    "cap": "elob",
+    "kind": "grain",
+    "iddress": "ci.grains.input",
+    "label": "InputField",
+    "default": "ci.grains.input.@verfassung"
+}

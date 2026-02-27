@@ -1,0 +1,56 @@
+{
+    "iddress": [
+        "characters"
+    ],
+    "cap": "fassung",
+    "fassung": "characters",
+    "buffer": {
+        "bumber": 1
+    },
+    "characters": {
+        "body": {},
+        "route": {
+            "arguments": [],
+            "impact": []
+        },
+        "street": {
+            "arguments": [],
+            "units": []
+        },
+        "corner": {
+            "arguments": [],
+            "units": []
+        },
+        "exe": {
+            "arguments": [
+                "@",
+                "$vane",
+                "$rest"
+            ],
+            "units": [
+                {
+                    "cap": "unit",
+                    "unit": "instruction",
+                    "instruction": "resolve @",
+                    "lee": [
+                        "resolve",
+                        [
+                            "@"
+                        ]
+                    ]
+                }
+            ]
+        },
+        "ball": {
+            "arguments": [],
+            "shots": []
+        }
+    },
+    "collection": {
+        "character": [
+            "@not-logged-in"
+        ],
+        "arguments": [],
+        "subscribers": []
+    }
+}

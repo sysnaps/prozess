@@ -1,0 +1,44 @@
+{
+    "iddress": [
+        "leelang",
+        "vane",
+        "create"
+    ],
+    "cap": "lee",
+    "lee": [
+        "vane",
+        "create"
+    ],
+    "arguments": [
+        "$action",
+        "$origin",
+        "$character"
+    ],
+    "forms": {
+        "object": {
+            "unit": "lee",
+            "lee": [
+                "vane",
+                "create"
+            ],
+            "arguments": [
+                "$action",
+                "$origin",
+                "$character"
+            ],
+            "create": [
+                "$action",
+                "$origin",
+                "$character"
+            ]
+        },
+        "array": [
+            "lee",
+            "vane",
+            "create",
+            "$action",
+            "$origin",
+            "$character"
+        ]
+    }
+}

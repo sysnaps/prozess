@@ -1,0 +1,7 @@
+{
+    "cap": "elob",
+    "kind": "tab",
+    "iddress": "ci.tabs.reiter",
+    "label": "Reiter",
+    "default": "ci.tabs.reiter.@verfassung"
+}

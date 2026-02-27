@@ -1,0 +1,35 @@
+{
+    "cap": "elob",
+    "kind": "bar.fab",
+    "id": "ci.bar.fab",
+    "label": "fabBar",
+    "bay": [
+        "ci.fabs.namespaces",
+        "ci.fabs.concepts",
+        "ci.fabs.contracts",
+        "ci.fabs.plocks",
+        "ci.fabs.wells",
+        "ci.fabs.deltas",
+        "ci.fabs.hierarchies",
+        "ci.fabs.prompts",
+        "ci.fabs.interactions",
+        "ci.fabs.characters",
+        "ci.fabs.groups",
+        "ci.fabs.how2s"
+    ],
+    "style": {
+        "display": "flex",
+        "alignItems": "center",
+        "background": "var(--bg-secondary)",
+        "borderBottom": "1px solid var(--border)",
+        "padding": "0 12px",
+        "gap": "2px",
+        "overflow": "visible",
+        "height": "6%",
+        "position": "relative",
+        "zIndex": 100
+    },
+    "fascicle": [],
+    "maid": [],
+    "iddress": "ci.bar.fab"
+}

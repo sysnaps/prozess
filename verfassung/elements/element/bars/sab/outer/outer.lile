@@ -1,0 +1,15 @@
+{
+    "body": {
+        "style": {
+            "display": "flex",
+            "alignItems": "center",
+            "background": "var(--bg-tertiary)",
+            "borderBottom": "1px solid var(--border)",
+            "padding": "0 16px",
+            "fontSize": "12px",
+            "color": "var(--text-secondary)",
+            "gap": "12px",
+            "minHeight": "32px"
+        }
+    }
+}

@@ -1,0 +1,40 @@
+{
+    "iddress": [
+        "leelang",
+        "find",
+        "index"
+    ],
+    "cap": "lee",
+    "lee": [
+        "find",
+        "index"
+    ],
+    "arguments": [
+        "$array",
+        "$fn"
+    ],
+    "forms": {
+        "object": {
+            "unit": "lee",
+            "lee": [
+                "find",
+                "index"
+            ],
+            "arguments": [
+                "$array",
+                "$fn"
+            ],
+            "index": [
+                "$array",
+                "$fn"
+            ]
+        },
+        "array": [
+            "lee",
+            "find",
+            "index",
+            "$array",
+            "$fn"
+        ]
+    }
+}

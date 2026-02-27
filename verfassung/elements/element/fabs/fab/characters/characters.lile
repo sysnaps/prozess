@@ -1,0 +1,7 @@
+{
+    "cap": "elob",
+    "kind": "characters",
+    "iddress": "fabs.characters",
+    "label": "characters",
+    "default": "fabs.characters.@verfassung"
+}

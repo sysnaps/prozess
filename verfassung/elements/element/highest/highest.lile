@@ -1,0 +1,7 @@
+{
+    "cap": "print",
+    "kind": "highest",
+    "iddress": "ci.highest.highest",
+    "label": "Highest",
+    "default": "ci.highest.highest.@verfassung"
+}

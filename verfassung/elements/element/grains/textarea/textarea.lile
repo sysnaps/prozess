@@ -1,0 +1,7 @@
+{
+    "cap": "elob",
+    "kind": "grain",
+    "iddress": "ci.grains.textarea",
+    "label": "TextArea",
+    "default": "ci.grains.textarea.@verfassung"
+}

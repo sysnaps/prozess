@@ -1,0 +1,9 @@
+{
+    "body": {
+        "style": {
+            "color": "var(--text-tertiary, #666)",
+            "fontStyle": "italic",
+            "fontSize": 12
+        }
+    }
+}

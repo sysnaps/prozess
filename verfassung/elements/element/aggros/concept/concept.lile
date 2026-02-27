@@ -1,0 +1,10 @@
+{
+    "body": {
+        "style": {
+            "flex": 1,
+            "fontSize": 13,
+            "fontWeight": 500,
+            "color": "var(--text-primary)"
+        }
+    }
+}

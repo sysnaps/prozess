@@ -1,0 +1,9 @@
+{
+    "body": {
+        "style": {
+            "overflow": "hidden",
+            "borderTop": "1px solid var(--lister-col-border)",
+            "background": "var(--lister-bg)"
+        }
+    }
+}

@@ -1,0 +1,10 @@
+{
+    "body": {
+        "style": {
+            "fontSize": 18,
+            "fontWeight": 600,
+            "color": "var(--text-primary)",
+            "marginBottom": 8
+        }
+    }
+}

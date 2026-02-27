@@ -1,0 +1,13 @@
+{
+    "body": {
+        "style": {
+            "fontSize": 10,
+            "color": "var(--text-secondary)",
+            "whiteSpace": "nowrap",
+            "fontWeight": 500,
+            "padding": "1px 6px",
+            "background": "var(--counter-bg)",
+            "borderRadius": 8
+        }
+    }
+}

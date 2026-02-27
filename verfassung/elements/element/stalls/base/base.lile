@@ -1,0 +1,22 @@
+{
+    "body": {
+        "style": {
+            "display": "flex",
+            "alignItems": "center",
+            "justifyContent": "center",
+            "padding": "5px 14px",
+            "fontSize": 12,
+            "fontWeight": 600,
+            "color": "var(--text-primary)",
+            "background": "var(--bg-secondary)",
+            "border": "1px solid var(--border)",
+            "borderRadius": 4,
+            "cursor": "pointer",
+            "userSelect": "none",
+            "minWidth": 60,
+            "textAlign": "center",
+            "transition": "border-color 0.12s, background 0.12s",
+            "whiteSpace": "nowrap"
+        }
+    }
+}

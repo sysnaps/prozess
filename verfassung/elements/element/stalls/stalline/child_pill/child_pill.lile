@@ -1,0 +1,12 @@
+{
+    "body": {
+        "style": {
+            "fontSize": 11,
+            "padding": "2px 8px",
+            "borderRadius": 3,
+            "background": "var(--bg-secondary)",
+            "border": "1px solid var(--border)",
+            "color": "var(--text-primary)"
+        }
+    }
+}

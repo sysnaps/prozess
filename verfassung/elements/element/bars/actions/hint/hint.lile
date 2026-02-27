@@ -1,0 +1,10 @@
+{
+    "body": {
+        "style": {
+            "fontSize": 11,
+            "color": "var(--text-secondary)",
+            "fontStyle": "italic",
+            "marginLeft": 8
+        }
+    }
+}

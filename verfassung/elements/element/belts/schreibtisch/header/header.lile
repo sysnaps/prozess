@@ -1,0 +1,12 @@
+{
+    "body": {
+        "style": {
+            "fontSize": 16,
+            "fontWeight": 700,
+            "color": "var(--text-primary)",
+            "paddingBottom": 8,
+            "borderBottom": "1px solid var(--border)",
+            "letterSpacing": "0.2px"
+        }
+    }
+}

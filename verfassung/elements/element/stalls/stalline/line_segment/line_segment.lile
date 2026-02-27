@@ -1,0 +1,10 @@
+{
+    "body": {
+        "style": {
+            "height": 1,
+            "background": "var(--border)",
+            "flex": 1,
+            "minWidth": 8
+        }
+    }
+}

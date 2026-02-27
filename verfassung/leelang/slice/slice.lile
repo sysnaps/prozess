@@ -1,0 +1,40 @@
+{
+    "iddress": [
+        "leelang",
+        "slice"
+    ],
+    "cap": "lee",
+    "lee": [
+        "slice"
+    ],
+    "arguments": [
+        "$array",
+        "$start",
+        "$end"
+    ],
+    "forms": {
+        "object": {
+            "unit": "lee",
+            "lee": [
+                "slice"
+            ],
+            "arguments": [
+                "$array",
+                "$start",
+                "$end"
+            ],
+            "slice": [
+                "$array",
+                "$start",
+                "$end"
+            ]
+        },
+        "array": [
+            "lee",
+            "slice",
+            "$array",
+            "$start",
+            "$end"
+        ]
+    }
+}

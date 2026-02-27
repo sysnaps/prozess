@@ -1,0 +1,8 @@
+{
+    "body": {
+        "style": {
+            "fontSize": 13,
+            "color": "var(--text-secondary)"
+        }
+    }
+}

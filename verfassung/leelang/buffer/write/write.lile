@@ -1,0 +1,44 @@
+{
+    "iddress": [
+        "leelang",
+        "buffer",
+        "write"
+    ],
+    "cap": "lee",
+    "lee": [
+        "buffer",
+        "write"
+    ],
+    "arguments": [
+        "$buffer",
+        "$index",
+        "$value"
+    ],
+    "forms": {
+        "object": {
+            "unit": "lee",
+            "lee": [
+                "buffer",
+                "write"
+            ],
+            "arguments": [
+                "$buffer",
+                "$index",
+                "$value"
+            ],
+            "write": [
+                "$buffer",
+                "$index",
+                "$value"
+            ]
+        },
+        "array": [
+            "lee",
+            "buffer",
+            "write",
+            "$buffer",
+            "$index",
+            "$value"
+        ]
+    }
+}

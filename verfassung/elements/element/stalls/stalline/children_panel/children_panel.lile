@@ -1,0 +1,13 @@
+{
+    "body": {
+        "style": {
+            "padding": "6px 12px",
+            "background": "hsla(215, 20%, 18%, 0.5)",
+            "borderRadius": 4,
+            "marginTop": 4,
+            "display": "flex",
+            "flexWrap": "wrap",
+            "gap": 4
+        }
+    }
+}

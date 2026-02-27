@@ -1,0 +1,10 @@
+{
+    "body": {
+        "style": {
+            "fontSize": 13,
+            "fontWeight": 600,
+            "color": "var(--text-primary)",
+            "textAlign": "center"
+        }
+    }
+}

@@ -1,0 +1,14 @@
+{
+    "body": {
+        "style": {
+            "display": "flex",
+            "alignItems": "center",
+            "justifyContent": "center",
+            "cursor": "pointer",
+            "fontSize": 12,
+            "color": "var(--text-secondary)",
+            "padding": "0 4px",
+            "minHeight": 34
+        }
+    }
+}

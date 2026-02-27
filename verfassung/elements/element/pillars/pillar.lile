@@ -1,0 +1,7 @@
+{
+    "cap": "elob",
+    "kind": "pillar",
+    "iddress": "ci.pillar",
+    "label": "Pillar",
+    "default": "ci.pillar.@verfassung"
+}

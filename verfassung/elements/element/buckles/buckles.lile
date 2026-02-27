@@ -1,0 +1,7 @@
+{
+    "cap": "print",
+    "kind": "buckles",
+    "iddress": "ci.buckles.buckles",
+    "label": "Buckles",
+    "default": "ci.buckles.buckles.@verfassung"
+}

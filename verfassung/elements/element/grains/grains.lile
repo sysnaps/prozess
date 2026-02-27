@@ -1,0 +1,7 @@
+{
+    "cap": "print",
+    "kind": "grains",
+    "iddress": "ci.grains.grains",
+    "label": "Grains",
+    "default": "ci.grains.grains.@verfassung"
+}

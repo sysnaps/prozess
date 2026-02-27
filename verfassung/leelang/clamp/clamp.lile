@@ -1,0 +1,40 @@
+{
+    "iddress": [
+        "leelang",
+        "clamp"
+    ],
+    "cap": "lee",
+    "lee": [
+        "clamp"
+    ],
+    "arguments": [
+        "$value",
+        "$min",
+        "$max"
+    ],
+    "forms": {
+        "object": {
+            "unit": "lee",
+            "lee": [
+                "clamp"
+            ],
+            "arguments": [
+                "$value",
+                "$min",
+                "$max"
+            ],
+            "clamp": [
+                "$value",
+                "$min",
+                "$max"
+            ]
+        },
+        "array": [
+            "lee",
+            "clamp",
+            "$value",
+            "$min",
+            "$max"
+        ]
+    }
+}

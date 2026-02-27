@@ -1,0 +1,40 @@
+{
+    "iddress": [
+        "leelang",
+        "resolve",
+        "active"
+    ],
+    "cap": "lee",
+    "lee": [
+        "resolve",
+        "active"
+    ],
+    "arguments": [
+        "$path",
+        "$active"
+    ],
+    "forms": {
+        "object": {
+            "unit": "lee",
+            "lee": [
+                "resolve",
+                "active"
+            ],
+            "arguments": [
+                "$path",
+                "$active"
+            ],
+            "active": [
+                "$path",
+                "$active"
+            ]
+        },
+        "array": [
+            "lee",
+            "resolve",
+            "active",
+            "$path",
+            "$active"
+        ]
+    }
+}

@@ -1,0 +1,40 @@
+{
+    "iddress": [
+        "leelang",
+        "char",
+        "at"
+    ],
+    "cap": "lee",
+    "lee": [
+        "char",
+        "at"
+    ],
+    "arguments": [
+        "$string",
+        "$index"
+    ],
+    "forms": {
+        "object": {
+            "unit": "lee",
+            "lee": [
+                "char",
+                "at"
+            ],
+            "arguments": [
+                "$string",
+                "$index"
+            ],
+            "at": [
+                "$string",
+                "$index"
+            ]
+        },
+        "array": [
+            "lee",
+            "char",
+            "at",
+            "$string",
+            "$index"
+        ]
+    }
+}

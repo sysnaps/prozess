@@ -1,0 +1,36 @@
+{
+    "iddress": [
+        "leelang",
+        "fallback"
+    ],
+    "cap": "lee",
+    "lee": [
+        "fallback"
+    ],
+    "arguments": [
+        "$a",
+        "$b"
+    ],
+    "forms": {
+        "object": {
+            "unit": "lee",
+            "lee": [
+                "fallback"
+            ],
+            "arguments": [
+                "$a",
+                "$b"
+            ],
+            "fallback": [
+                "$a",
+                "$b"
+            ]
+        },
+        "array": [
+            "lee",
+            "fallback",
+            "$a",
+            "$b"
+        ]
+    }
+}

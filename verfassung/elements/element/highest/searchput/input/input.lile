@@ -1,0 +1,14 @@
+{
+    "body": {
+        "style": {
+            "border": "none",
+            "outline": "none",
+            "background": "transparent",
+            "color": "var(--text-primary)",
+            "fontSize": 11,
+            "flex": 1,
+            "padding": "2px 0",
+            "lineHeight": 1.4
+        }
+    }
+}

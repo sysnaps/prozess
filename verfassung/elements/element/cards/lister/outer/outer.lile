@@ -1,0 +1,14 @@
+{
+    "body": {
+        "style": {
+            "display": "flex",
+            "flexDirection": "column",
+            "flex": 1,
+            "overflow": "hidden",
+            "border": "2px solid var(--lister-border)",
+            "borderRadius": 4,
+            "background": "var(--lister-bg)",
+            "margin": "4px"
+        }
+    }
+}

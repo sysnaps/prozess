@@ -1,0 +1,40 @@
+{
+    "iddress": [
+        "leelang",
+        "between"
+    ],
+    "cap": "lee",
+    "lee": [
+        "between"
+    ],
+    "arguments": [
+        "$value",
+        "$low",
+        "$high"
+    ],
+    "forms": {
+        "object": {
+            "unit": "lee",
+            "lee": [
+                "between"
+            ],
+            "arguments": [
+                "$value",
+                "$low",
+                "$high"
+            ],
+            "between": [
+                "$value",
+                "$low",
+                "$high"
+            ]
+        },
+        "array": [
+            "lee",
+            "between",
+            "$value",
+            "$low",
+            "$high"
+        ]
+    }
+}

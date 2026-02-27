@@ -1,0 +1,7 @@
+{
+    "cap": "elob",
+    "kind": "tag",
+    "iddress": "ci.tags.bar",
+    "label": "TagBar",
+    "default": "ci.tags.bar.@verfassung"
+}

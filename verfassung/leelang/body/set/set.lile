@@ -1,0 +1,44 @@
+{
+    "iddress": [
+        "leelang",
+        "body",
+        "set"
+    ],
+    "cap": "lee",
+    "lee": [
+        "body",
+        "set"
+    ],
+    "arguments": [
+        "$vane",
+        "$key",
+        "$value"
+    ],
+    "forms": {
+        "object": {
+            "unit": "lee",
+            "lee": [
+                "body",
+                "set"
+            ],
+            "arguments": [
+                "$vane",
+                "$key",
+                "$value"
+            ],
+            "set": [
+                "$vane",
+                "$key",
+                "$value"
+            ]
+        },
+        "array": [
+            "lee",
+            "body",
+            "set",
+            "$vane",
+            "$key",
+            "$value"
+        ]
+    }
+}

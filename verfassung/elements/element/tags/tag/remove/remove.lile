@@ -1,0 +1,14 @@
+{
+    "body": {
+        "style": {
+            "background": "none",
+            "border": "none",
+            "color": "var(--text-secondary)",
+            "cursor": "pointer",
+            "fontSize": 10,
+            "padding": "0 1px",
+            "lineHeight": 1,
+            "opacity": 0.6
+        }
+    }
+}

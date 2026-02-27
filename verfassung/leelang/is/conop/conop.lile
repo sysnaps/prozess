@@ -1,0 +1,36 @@
+{
+    "iddress": [
+        "leelang",
+        "is",
+        "conop"
+    ],
+    "cap": "lee",
+    "lee": [
+        "is",
+        "conop"
+    ],
+    "arguments": [
+        "$string"
+    ],
+    "forms": {
+        "object": {
+            "unit": "lee",
+            "lee": [
+                "is",
+                "conop"
+            ],
+            "arguments": [
+                "$string"
+            ],
+            "conop": [
+                "$string"
+            ]
+        },
+        "array": [
+            "lee",
+            "is",
+            "conop",
+            "$string"
+        ]
+    }
+}

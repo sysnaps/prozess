@@ -1,0 +1,7 @@
+{
+    "cap": "print",
+    "kind": "plocks",
+    "iddress": "fabs.plocks",
+    "label": "plocks",
+    "default": "fabs.plocks.@verfassung"
+}

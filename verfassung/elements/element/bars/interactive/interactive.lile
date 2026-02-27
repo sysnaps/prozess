@@ -1,0 +1,7 @@
+{
+    "cap": "elob",
+    "kind": "bar",
+    "iddress": "ci.bar.interactive",
+    "label": "InteractiveBar",
+    "default": "ci.bar.interactive.@verfassung"
+}

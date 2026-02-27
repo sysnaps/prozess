@@ -1,0 +1,7 @@
+{
+    "body": {
+        "style": {
+            "borderRight": "1px solid var(--border)"
+        }
+    }
+}

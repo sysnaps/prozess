@@ -1,0 +1,7 @@
+{
+    "cap": "elob",
+    "kind": "pants",
+    "iddress": "ci.pants.full.full",
+    "label": "FullPants",
+    "default": "ci.pants.full.full.@verfassung"
+}

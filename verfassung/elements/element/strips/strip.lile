@@ -1,0 +1,7 @@
+{
+    "cap": "elob",
+    "kind": "strip",
+    "iddress": "ci.strip.strip",
+    "label": "Strip",
+    "default": "ci.strip.strip.@verfassung"
+}

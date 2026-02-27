@@ -1,0 +1,10 @@
+{
+    "cap": "fassung",
+    "fassung": "a plan is all you need",
+    "a plan is all you need": {
+        "arguments": [
+            "$thrigit"
+        ],
+        "units": []
+    }
+}

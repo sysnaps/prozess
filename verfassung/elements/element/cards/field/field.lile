@@ -1,0 +1,7 @@
+{
+    "cap": "elob",
+    "kind": "card",
+    "iddress": "ci.cards.field",
+    "label": "CardField",
+    "default": "ci.cards.field.@verfassung"
+}

@@ -1,0 +1,14 @@
+{
+    "body": {
+        "style": {
+            "display": "flex",
+            "alignItems": "center",
+            "gap": 2,
+            "padding": "4px 6px",
+            "background": "var(--bg-tertiary)",
+            "borderBottom": "1px solid var(--border)",
+            "minHeight": 4,
+            "flexWrap": "wrap"
+        }
+    }
+}
