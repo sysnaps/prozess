@@ -574,7 +574,7 @@ wss.on('connection', function (ws) {
 
                 case 'signal.request': {
                     // client wants to connect to a brain
-                    var targetBrain = brains[data.brainId]
+                    var targetBrain = brains[parsed.brainId || data.brainId]
                     if (targetBrain && targetBrain.readyState === WebSocket.OPEN) {
                         // tell brain about the client
                         targetBrain.send(JSON.stringify({
@@ -582,7 +582,7 @@ wss.on('connection', function (ws) {
                             clientId: clientInfo ? clientInfo.id : 'unknown'
                         }))
                         // tell client the brain is available
-                        ws.send(JSON.stringify({ type: 'signal.ready', brainId: data.brainId }))
+                        ws.send(JSON.stringify({ type: 'signal.ready', brainId: parsed.brainId || data.brainId }))
                     } else {
                         ws.send(JSON.stringify({ type: 'signal.brain-offline', brainId: data.brainId }))
                     }
@@ -591,12 +591,12 @@ wss.on('connection', function (ws) {
 
                 case 'signal.offer': {
                     // client sending offer to brain
-                    var targetBrain2 = brains[data.brainId]
+                    var targetBrain2 = brains[parsed.brainId || data.brainId]
                     if (targetBrain2 && targetBrain2.readyState === WebSocket.OPEN) {
                         targetBrain2.send(JSON.stringify({
                             type: 'signal.offer',
                             clientId: clientInfo ? clientInfo.id : 'unknown',
-                            sdp: data.sdp
+                            sdp: parsed.sdp || data.sdp
                         }))
                     }
                     return
@@ -604,11 +604,11 @@ wss.on('connection', function (ws) {
 
                 case 'signal.answer': {
                     // brain sending answer to client
-                    var targetClient = findClientById(data.clientId)
+                    var targetClient = findClientById(parsed.clientId || data.clientId)
                     if (targetClient) {
                         targetClient.send(JSON.stringify({
                             type: 'signal.answer',
-                            sdp: data.sdp
+                            sdp: parsed.sdp || data.sdp
                         }))
                     }
                     return
@@ -616,23 +616,26 @@ wss.on('connection', function (ws) {
 
                 case 'signal.ice': {
                     // forward ICE candidates in either direction
-                    if (data.brainId) {
+                    var iceBrainId = parsed.brainId || data.brainId
+                    var iceClientId = parsed.clientId || data.clientId
+                    var iceCandidate = parsed.candidate || data.candidate
+                    if (iceBrainId) {
                         // client → brain
-                        var targetBrain3 = brains[data.brainId]
+                        var targetBrain3 = brains[iceBrainId]
                         if (targetBrain3 && targetBrain3.readyState === WebSocket.OPEN) {
                             targetBrain3.send(JSON.stringify({
                                 type: 'signal.ice',
                                 clientId: clientInfo ? clientInfo.id : 'unknown',
-                                candidate: data.candidate
+                                candidate: iceCandidate
                             }))
                         }
-                    } else if (data.clientId) {
+                    } else if (iceClientId) {
                         // brain → client
-                        var targetClient2 = findClientById(data.clientId)
+                        var targetClient2 = findClientById(iceClientId)
                         if (targetClient2) {
                             targetClient2.send(JSON.stringify({
                                 type: 'signal.ice',
-                                candidate: data.candidate
+                                candidate: iceCandidate
                             }))
                         }
                     }
@@ -641,26 +644,30 @@ wss.on('connection', function (ws) {
 
                 case 'relay.send': {
                     // client wants to relay a message to brain (fallback)
-                    var targetBrain4 = brains[data.brainId]
+                    var relayBrainId = parsed.brainId || data.brainId
+                    var relayPayload = parsed.payload || data.payload
+                    var targetBrain4 = brains[relayBrainId]
                     if (targetBrain4 && targetBrain4.readyState === WebSocket.OPEN) {
                         targetBrain4.send(JSON.stringify({
                             type: 'relay.message',
                             clientId: clientInfo ? clientInfo.id : 'unknown',
-                            payload: data.payload
+                            payload: relayPayload
                         }))
                     } else {
-                        ws.send(JSON.stringify({ id: data.payload ? data.payload.id : null, error: 'brain offline' }))
+                        ws.send(JSON.stringify({ id: relayPayload ? relayPayload.id : null, error: 'brain offline' }))
                     }
                     return
                 }
 
                 case 'relay.response': {
                     // brain sending relay response back to client
-                    var targetClient3 = findClientById(data.clientId)
+                    var relayClientId = parsed.clientId || data.clientId
+                    var relayRespPayload = parsed.payload || data.payload
+                    var targetClient3 = findClientById(relayClientId)
                     if (targetClient3) {
                         targetClient3.send(JSON.stringify({
                             type: 'relay.response',
-                            payload: data.payload
+                            payload: relayRespPayload
                         }))
                     }
                     return
