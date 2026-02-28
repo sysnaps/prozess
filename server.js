@@ -312,7 +312,7 @@ wss.on('connection', function (ws) {
         try {
             parsed = JSON.parse(msg.toString())
             var type = parsed.type
-            var data = parsed.data
+            var data = parsed.data || {}
             var id = parsed.id
 
             var response = { id: id }
