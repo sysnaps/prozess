@@ -53,8 +53,19 @@ function characterPath(name) {
     if (middle) segments.push(middle)
 
     var folderPath = path.join(BACKSTAGE_BASE, ...segments)
-    var fileName = '@' + clean + '.fassung'
+    var fileName = '@' + clean + '.character'
     return path.join(folderPath, fileName)
+}
+
+function allCharacterNames() {
+    // scan all .character files to get every taken name
+    var names = []
+    walkFiles(BACKSTAGE_BASE, '.character', function (filePath) {
+        // filename is @first-middle-last.character
+        var base = path.basename(filePath, '.character')
+        names.push(base.toLowerCase())
+    })
+    return names
 }
 
 function handleSignUp(data) {
@@ -67,9 +78,16 @@ function handleSignUp(data) {
 
     var filePath = characterPath(name)
 
-    // check if character already exists
+    // check if character already exists at exact path
     if (fs.existsSync(filePath)) {
         throw new Error('character already exists')
+    }
+
+    // check global uniqueness — no two characters can share a name
+    var taken = allCharacterNames()
+    var cleanName = name.replace(/^@/, '').toLowerCase()
+    if (taken.includes('@' + cleanName)) {
+        throw new Error('that name is taken')
     }
 
     var crypto = require('crypto')

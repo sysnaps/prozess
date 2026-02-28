@@ -4,9 +4,10 @@
 // Usage: node local-brain.js
 // Optional: node local-brain.js --brain-id my-brain --signal wss://databrain-we87.onrender.com
 
-var wrtc = require('wrtc')
+var werift = require('werift')
 var WebSocket = require('ws')
 var irl = require('./irl_handlers')
+var stripeEnergy = require('./stripe-energy')
 
 // ─── CONFIG ───
 var BRAIN_ID = process.argv.includes('--brain-id')
@@ -35,7 +36,6 @@ function connectSignaling() {
 
     ws.on('open', function () {
         console.log('local-brain: connected to signaling server')
-        // register as a brain
         ws.send(JSON.stringify({
             type: 'brain.register',
             brainId: BRAIN_ID
@@ -74,112 +74,105 @@ function handleSignalingMessage(msg) {
             break
 
         case 'signal.request':
-            // a client wants to connect
             console.log('local-brain: connection request from client ' + msg.clientId)
-            createPeerConnection(msg.clientId)
             break
 
         case 'signal.offer':
-            // client sent an SDP offer
             handleOffer(msg.clientId, msg.sdp)
             break
 
         case 'signal.ice':
-            // client sent an ICE candidate
             handleIceCandidate(msg.clientId, msg.candidate)
             break
 
         case 'relay.message':
-            // fallback: client is relaying through render
             handleRelayMessage(msg.clientId, msg.payload)
             break
 
         default:
-            // ignore unknown
             break
     }
 }
 
-// ─── WEBRTC PEER CONNECTION ───
-function createPeerConnection(clientId) {
-    var config = {
-        iceServers: [
-            { urls: 'stun:stun.l.google.com:19302' },
-            { urls: 'stun:stun1.l.google.com:19302' }
-        ]
-    }
+// ─── WEBRTC PEER CONNECTION (werift API) ───
+async function handleOffer(clientId, sdp) {
+    try {
+        var pc = new werift.RTCPeerConnection({
+            iceServers: [
+                { urls: 'stun:stun.l.google.com:19302' },
+                { urls: 'stun:stun1.l.google.com:19302' }
+            ]
+        })
 
-    var pc = new wrtc.RTCPeerConnection(config)
-
-    pc.onicecandidate = function (event) {
-        if (event.candidate) {
+        pc.onIceCandidate.subscribe(function (candidate) {
             sendSignal({
                 type: 'signal.ice',
                 clientId: clientId,
-                candidate: event.candidate
-            })
-        }
-    }
-
-    pc.ondatachannel = function (event) {
-        var channel = event.channel
-        console.log('local-brain: data channel opened with client ' + clientId)
-
-        peers[clientId] = { pc: pc, dataChannel: channel }
-
-        channel.onmessage = function (evt) {
-            handleDataMessage(clientId, evt.data)
-        }
-
-        channel.onclose = function () {
-            console.log('local-brain: data channel closed for client ' + clientId)
-            cleanupPeer(clientId)
-        }
-    }
-
-    pc.onconnectionstatechange = function () {
-        if (pc.connectionState === 'failed' || pc.connectionState === 'disconnected') {
-            console.log('local-brain: peer ' + clientId + ' ' + pc.connectionState)
-            cleanupPeer(clientId)
-        }
-    }
-
-    peers[clientId] = { pc: pc, dataChannel: null }
-}
-
-function handleOffer(clientId, sdp) {
-    var peer = peers[clientId]
-    if (!peer) {
-        createPeerConnection(clientId)
-        peer = peers[clientId]
-    }
-
-    var pc = peer.pc
-    var desc = new wrtc.RTCSessionDescription({ type: 'offer', sdp: sdp })
-
-    pc.setRemoteDescription(desc)
-        .then(function () { return pc.createAnswer() })
-        .then(function (answer) { return pc.setLocalDescription(answer) })
-        .then(function () {
-            sendSignal({
-                type: 'signal.answer',
-                clientId: clientId,
-                sdp: pc.localDescription.sdp
+                candidate: candidate.toJSON()
             })
         })
-        .catch(function (err) {
-            console.error('local-brain: offer handling failed — ' + err.message)
+
+        pc.onDataChannel.subscribe(function (channel) {
+            console.log('local-brain: data channel opened with client ' + clientId)
+            peers[clientId] = { pc: pc, dataChannel: channel }
+
+            channel.message.subscribe(function (data) {
+                // data comes as Buffer from werift
+                var str = typeof data === 'string' ? data : data.toString('utf-8')
+                handleDataMessage(clientId, str)
+            })
+
+            channel.onClose.subscribe(function () {
+                console.log('local-brain: data channel closed for client ' + clientId)
+                cleanupPeer(clientId)
+            })
         })
+
+        pc.onConnectionStateChange.subscribe(function () {
+            var state = pc.connectionState
+            if (state === 'failed' || state === 'disconnected' || state === 'closed') {
+                console.log('local-brain: peer ' + clientId + ' ' + state)
+                cleanupPeer(clientId)
+            }
+        })
+
+        // set remote offer
+        await pc.setRemoteDescription({
+            type: 'offer',
+            sdp: sdp
+        })
+
+        // create and send answer
+        var answer = await pc.createAnswer()
+        await pc.setLocalDescription(answer)
+
+        sendSignal({
+            type: 'signal.answer',
+            clientId: clientId,
+            sdp: pc.localDescription.sdp
+        })
+
+        // store peer (channel will be added when ondatachannel fires)
+        if (!peers[clientId]) {
+            peers[clientId] = { pc: pc, dataChannel: null }
+        }
+
+        console.log('local-brain: sent answer to client ' + clientId)
+
+    } catch (err) {
+        console.error('local-brain: offer handling failed — ' + err.message)
+    }
 }
 
-function handleIceCandidate(clientId, candidate) {
+async function handleIceCandidate(clientId, candidate) {
     var peer = peers[clientId]
     if (!peer || !peer.pc) return
 
-    peer.pc.addIceCandidate(new wrtc.RTCIceCandidate(candidate))
-        .catch(function (err) {
-            console.error('local-brain: ICE candidate failed — ' + err.message)
-        })
+    try {
+        await peer.pc.addIceCandidate(candidate)
+    } catch (err) {
+        console.error('local-brain: ICE candidate failed — ' + err.message)
+    }
 }
 
 function cleanupPeer(clientId) {
@@ -191,7 +184,6 @@ function cleanupPeer(clientId) {
 }
 
 // ─── DATA MESSAGE HANDLER ───
-// same protocol as the WebSocket messages, just over the data channel
 function handleDataMessage(clientId, raw) {
     var parsed = null
     try {
@@ -231,6 +223,22 @@ function handleDataMessage(clientId, raw) {
             case 'ping':
                 response.data = { pong: true }
                 break
+            case 'irl.energy.buy':
+                stripeEnergy.createCheckoutSession(data.character || 'unknown', function (err, result) {
+                    var resp = { id: parsed.id, data: null, error: null }
+                    if (err) resp.error = err.message
+                    else resp.data = result
+                    sendToClient(clientId, resp)
+                })
+                return // async — don't send response now
+            case 'irl.energy.check':
+                stripeEnergy.checkSession(data.sessionId, function (err, result) {
+                    var resp = { id: parsed.id, data: null, error: null }
+                    if (err) resp.error = err.message
+                    else resp.data = result
+                    sendToClient(clientId, resp)
+                })
+                return // async
             default:
                 response.error = 'unknown type: ' + type
         }
@@ -243,11 +251,30 @@ function handleDataMessage(clientId, raw) {
 
 // ─── RELAY FALLBACK ───
 function handleRelayMessage(clientId, payload) {
-    // same as handleDataMessage but response goes back through render
     var parsed = payload
     var response = { id: parsed.id || null, data: null, error: null }
     var type = parsed.type
     var data = parsed.data || {}
+
+    // async handlers
+    if (type === 'irl.energy.buy') {
+        stripeEnergy.createCheckoutSession(data.character || 'unknown', function (err, result) {
+            var resp = { id: parsed.id, data: null, error: null }
+            if (err) resp.error = err.message
+            else resp.data = result
+            sendSignal({ type: 'relay.response', clientId: clientId, payload: resp })
+        })
+        return
+    }
+    if (type === 'irl.energy.check') {
+        stripeEnergy.checkSession(data.sessionId, function (err, result) {
+            var resp = { id: parsed.id, data: null, error: null }
+            if (err) resp.error = err.message
+            else resp.data = result
+            sendSignal({ type: 'relay.response', clientId: clientId, payload: resp })
+        })
+        return
+    }
 
     try {
         switch (type) {
@@ -275,7 +302,7 @@ function handleRelayMessage(clientId, payload) {
 // ─── SEND HELPERS ───
 function sendToClient(clientId, msg) {
     var peer = peers[clientId]
-    if (!peer || !peer.dataChannel || peer.dataChannel.readyState !== 'open') {
+    if (!peer || !peer.dataChannel) {
         // fallback: relay through render
         sendSignal({
             type: 'relay.response',
@@ -284,7 +311,16 @@ function sendToClient(clientId, msg) {
         })
         return
     }
-    peer.dataChannel.send(JSON.stringify(msg))
+    try {
+        peer.dataChannel.send(JSON.stringify(msg))
+    } catch (e) {
+        // data channel broken, relay instead
+        sendSignal({
+            type: 'relay.response',
+            clientId: clientId,
+            payload: msg
+        })
+    }
 }
 
 function sendSignal(msg) {

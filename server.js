@@ -563,6 +563,12 @@ wss.on('connection', function (ws) {
                     if (clientInfo) clientInfo.brainId = bid
                     console.log('prozess: brain registered — ' + bid)
                     ws.send(JSON.stringify({ type: 'brain.registered', brainId: bid }))
+                    // notify ALL connected clients that this brain is now online
+                    clients.forEach(function (info, socket) {
+                        if (socket !== ws && socket.readyState === WebSocket.OPEN) {
+                            socket.send(JSON.stringify({ type: 'signal.ready', brainId: bid }))
+                        }
+                    })
                     return // don't send normal response
                 }
 
