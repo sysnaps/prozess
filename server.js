@@ -4,12 +4,26 @@ var path = require('path')
 var crypto = require('crypto')
 var verfassung = require('./verfassung/verfassung_handlers')
 var irl = require('./irl_handlers')
+var stripeEnergy = require('./stripe-energy')
 
 var PORT = process.env.PORT || 3000
 var PROZESS_ROOT = path.join(__dirname)
 
 // initialize I.R.L. directory structure
 irl.init()
+
+// ════════════════════════════════════════════
+// BRAIN REGISTRY — local brains register here for WebRTC signaling
+// ════════════════════════════════════════════
+var brains = {} // brainId → ws
+
+function findClientById(clientId) {
+    var found = null
+    clients.forEach(function (info, socket) {
+        if (info.id === clientId) found = socket
+    })
+    return found
+}
 
 // ════════════════════════════════════════════
 // PROZESS — the databrains server
@@ -513,6 +527,139 @@ wss.on('connection', function (ws) {
                     }
                     break
 
+                case 'irl.energy.buy': {
+                    // create Stripe checkout session, return URL
+                    var charName = data.character || 'unknown'
+                    var energyResponseId = parsed.id
+                    stripeEnergy.createCheckoutSession(charName, function (err, result) {
+                        var resp = { id: energyResponseId, data: null, error: null }
+                        if (err) resp.error = err.message
+                        else resp.data = result
+                        try { ws.send(JSON.stringify(resp)) } catch (e) {}
+                    })
+                    return // async — don't send response now
+                }
+
+                case 'irl.energy.check': {
+                    // check if a checkout session was paid
+                    var sessionId = data.sessionId
+                    var checkResponseId = parsed.id
+                    stripeEnergy.checkSession(sessionId, function (err, result) {
+                        var resp = { id: checkResponseId, data: null, error: null }
+                        if (err) resp.error = err.message
+                        else resp.data = result
+                        try { ws.send(JSON.stringify(resp)) } catch (e) {}
+                    })
+                    return // async
+                }
+
+                // ════════════════════════════════════
+                // WEBRTC SIGNALING
+                // ════════════════════════════════════
+                case 'brain.register': {
+                    var bid = data.brainId || 'default-brain'
+                    brains[bid] = ws
+                    if (clientInfo) clientInfo.role = 'brain'
+                    if (clientInfo) clientInfo.brainId = bid
+                    console.log('prozess: brain registered — ' + bid)
+                    ws.send(JSON.stringify({ type: 'brain.registered', brainId: bid }))
+                    return // don't send normal response
+                }
+
+                case 'signal.request': {
+                    // client wants to connect to a brain
+                    var targetBrain = brains[data.brainId]
+                    if (targetBrain && targetBrain.readyState === WebSocket.OPEN) {
+                        // tell brain about the client
+                        targetBrain.send(JSON.stringify({
+                            type: 'signal.request',
+                            clientId: clientInfo ? clientInfo.id : 'unknown'
+                        }))
+                        // tell client the brain is available
+                        ws.send(JSON.stringify({ type: 'signal.ready', brainId: data.brainId }))
+                    } else {
+                        ws.send(JSON.stringify({ type: 'signal.brain-offline', brainId: data.brainId }))
+                    }
+                    return
+                }
+
+                case 'signal.offer': {
+                    // client sending offer to brain
+                    var targetBrain2 = brains[data.brainId]
+                    if (targetBrain2 && targetBrain2.readyState === WebSocket.OPEN) {
+                        targetBrain2.send(JSON.stringify({
+                            type: 'signal.offer',
+                            clientId: clientInfo ? clientInfo.id : 'unknown',
+                            sdp: data.sdp
+                        }))
+                    }
+                    return
+                }
+
+                case 'signal.answer': {
+                    // brain sending answer to client
+                    var targetClient = findClientById(data.clientId)
+                    if (targetClient) {
+                        targetClient.send(JSON.stringify({
+                            type: 'signal.answer',
+                            sdp: data.sdp
+                        }))
+                    }
+                    return
+                }
+
+                case 'signal.ice': {
+                    // forward ICE candidates in either direction
+                    if (data.brainId) {
+                        // client → brain
+                        var targetBrain3 = brains[data.brainId]
+                        if (targetBrain3 && targetBrain3.readyState === WebSocket.OPEN) {
+                            targetBrain3.send(JSON.stringify({
+                                type: 'signal.ice',
+                                clientId: clientInfo ? clientInfo.id : 'unknown',
+                                candidate: data.candidate
+                            }))
+                        }
+                    } else if (data.clientId) {
+                        // brain → client
+                        var targetClient2 = findClientById(data.clientId)
+                        if (targetClient2) {
+                            targetClient2.send(JSON.stringify({
+                                type: 'signal.ice',
+                                candidate: data.candidate
+                            }))
+                        }
+                    }
+                    return
+                }
+
+                case 'relay.send': {
+                    // client wants to relay a message to brain (fallback)
+                    var targetBrain4 = brains[data.brainId]
+                    if (targetBrain4 && targetBrain4.readyState === WebSocket.OPEN) {
+                        targetBrain4.send(JSON.stringify({
+                            type: 'relay.message',
+                            clientId: clientInfo ? clientInfo.id : 'unknown',
+                            payload: data.payload
+                        }))
+                    } else {
+                        ws.send(JSON.stringify({ id: data.payload ? data.payload.id : null, error: 'brain offline' }))
+                    }
+                    return
+                }
+
+                case 'relay.response': {
+                    // brain sending relay response back to client
+                    var targetClient3 = findClientById(data.clientId)
+                    if (targetClient3) {
+                        targetClient3.send(JSON.stringify({
+                            type: 'relay.response',
+                            payload: data.payload
+                        }))
+                    }
+                    return
+                }
+
                 case 'presence.status':
                     var activeActors = []
                     clients.forEach(function (info) {
@@ -540,6 +687,11 @@ wss.on('connection', function (ws) {
     ws.on('close', function () {
         var info = clients.get(ws)
         clients.delete(ws)
+        // clean up brain registration if this was a brain
+        if (info && info.brainId && brains[info.brainId] === ws) {
+            delete brains[info.brainId]
+            console.log('prozess: brain ' + info.brainId + ' unregistered')
+        }
         console.log('prozess: client ' + (info ? info.id : '?') + ' disconnected (' + clients.size + ' remaining)')
         broadcastPresence()
     })

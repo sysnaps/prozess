@@ -4,7 +4,8 @@
 var fs = require('fs')
 var path = require('path')
 
-var IRL_ROOT = 'D:\\I\\R\\L'
+// detect OS — use D:\I\R\L on Windows, ./irl-data on Linux (render.com)
+var IRL_ROOT = process.platform === 'win32' ? path.join('D:', 'I', 'R', 'L') : (process.env.IRL_ROOT || './irl-data')
 
 // base path for preplanner ships
 // D:\I\R\L\Higherrarchies\Higherrarchy\preplanner\Highrarchy\plans\archy\complexity
