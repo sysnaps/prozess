@@ -13,7 +13,7 @@ var hyph = require('./hyph.handlers')
 var resolve = {}
 
 // ─── POINTERS ───
-resolve.pointers = ["!", "~", "%", "@", ".", ":", "/", "^"]
+resolve.pointers = ["!", "~", "%", "@", ".", ":", "/", "^", "°"]
 
 // ─── PARSER ───
 // irlink string → flat irpath array
