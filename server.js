@@ -4,13 +4,22 @@ var path = require('path')
 var crypto = require('crypto')
 var verfassung = require('./verfassung/verfassung_handlers')
 var irl = require('./irl_handlers')
+var i = require('./i.handlers')
+var cache = require('./cache')
+var qugit = require('./verfassung/qugit')
 var stripeEnergy = require('./stripe-energy')
+var hyph = require('./hyph.handlers')
 
 var PORT = process.env.PORT || 3000
 var PROZESS_ROOT = path.join(__dirname)
 
 // initialize I.R.L. directory structure
 irl.init()
+
+// initialize Level cache and qugit registry
+cache.init(i.root)
+qugit.init(i.root)
+qugit.start()
 
 // ════════════════════════════════════════════
 // BRAIN REGISTRY — local brains register here for WebRTC signaling
@@ -166,7 +175,7 @@ loadTable()
 // ACTOR AUTH HANDLERS
 // ════════════════════════════════════════════
 function actorKey(name) {
-    return [name.first, name.middle || '', name.last].join('.').toLowerCase()
+    return [name.first, name.middle || '', name.last || ''].join('.').toLowerCase()
 }
 
 function handleAuth(data) {
@@ -469,6 +478,73 @@ wss.on('connection', function (ws) {
                 // ════════════════════════════════════
                 // I.R.L. HANDLERS
                 // ════════════════════════════════════
+                // ════════════════════════════════════
+                // I HANDLERS (i.r.ead, i.r.walk, i.bumber.mint, i.r.ite)
+                // ════════════════════════════════════
+                case 'i.r.ead': {
+                    // async — goes through Level cache
+                    var ead = parsed.id
+                    i.ead(data).then(function (result) {
+                        ws.send(JSON.stringify({ id: ead, data: result }))
+                    }).catch(function (e) {
+                        ws.send(JSON.stringify({ id: ead, error: e.message }))
+                    })
+                    return // async — don't send response now
+                }
+
+                case 'i.r.walk':
+                    try { response.data = i.walk(data) }
+                    catch (e) { response.error = e.message }
+                    break
+
+                case 'i.bumber.mint':
+                    try { response.data = i.bumber.mint() }
+                    catch (e) { response.error = e.message }
+                    break
+
+                case 'i.r.ite':
+                    try { response.data = i.ite(data) }
+                    catch (e) { response.error = e.message }
+                    break
+
+                // ════════════════════════════════════
+                // HYPH HANDLERS
+                // ════════════════════════════════════
+                case 'hyph.ead':
+                    try { response.data = hyph.ead(data) }
+                    catch (e) { response.error = e.message }
+                    break
+
+                case 'hyph.ead.folder':
+                    try { response.data = hyph.ead.folder(data) }
+                    catch (e) { response.error = e.message }
+                    break
+
+                case 'hyph.ite':
+                    try { response.data = hyph.ite(data) }
+                    catch (e) { response.error = e.message }
+                    break
+
+                case 'qugit.lookup':
+                    try { response.data = i.qugit.lookup(data) }
+                    catch (e) { response.error = e.message }
+                    break
+
+                case 'qugit.register':
+                    try { response.data = i.qugit.register(data) }
+                    catch (e) { response.error = e.message }
+                    break
+
+                case 'qugit.replace':
+                    try { response.data = i.qugit.replace(data) }
+                    catch (e) { response.error = e.message }
+                    break
+
+                case 'qugit.batch':
+                    try { response.data = i.qugit.batch(data) }
+                    catch (e) { response.error = e.message }
+                    break
+
                 case 'irl.signup':
                     try {
                         response.data = irl.handleSignUp(data)
@@ -713,5 +789,6 @@ wss.on('connection', function (ws) {
 process.on('SIGINT', function () {
     if (tableDirty) saveTable()
     saveActors(actors)
+    qugit.save()
     process.exit(0)
 })

@@ -105,9 +105,7 @@ function handleSignUp(data) {
             hash: hash,
             salt: salt
         },
-        time: {
-            created: Date.now()
-        }
+        bundles: []
     }
 
     ensureDir(path.dirname(filePath))
@@ -116,7 +114,7 @@ function handleSignUp(data) {
 
     return {
         name: character.name,
-        time: character.time
+        bundles: character.bundles
     }
 }
 
@@ -148,7 +146,7 @@ function handleSignIn(data) {
 
     return {
         name: character.name,
-        time: character.time
+        bundles: character.bundles || []
     }
 }
 
@@ -183,10 +181,7 @@ function handleShipSave(data) {
 
     var shipData = data.data || {}
 
-    // stamp time
-    if (!shipData.time) shipData.time = {}
-    if (!shipData.time.created) shipData.time.created = Date.now()
-    shipData.time.modified = Date.now()
+    // no Date.now() — time is illegal in the I.R.L.
 
     fs.writeFileSync(filePath, JSON.stringify(shipData, null, 2), 'utf-8')
     console.log('irl: ship saved — ' + filePath)
@@ -242,9 +237,6 @@ function handleFassungSave(data) {
     ensureDir(path.dirname(filePath))
 
     var fassungData = data.data || {}
-    if (!fassungData.time) fassungData.time = {}
-    if (!fassungData.time.created) fassungData.time.created = Date.now()
-    fassungData.time.modified = Date.now()
 
     fs.writeFileSync(filePath, JSON.stringify(fassungData, null, 2), 'utf-8')
     console.log('irl: fassung saved — ' + filePath)
@@ -274,6 +266,52 @@ function handleFassungList(data) {
     return { items: fassungen }
 }
 
+// ─── BUNDLE CREATE ────────────────────────────────────
+
+function handleBundleCreate(data) {
+    if (!data.character) throw new Error('not signed in')
+    if (!data.iddress || !Array.isArray(data.iddress)) throw new Error('iddress required')
+    var bundleData = data.data || data.bundle
+    if (!bundleData) throw new Error('bundle data required')
+
+    // iddress walks the folder structure
+    // last element is the character name
+    var iddress = data.iddress
+    var charName = iddress[iddress.length - 1]
+    var folderParts = iddress.slice(0, -1)
+
+    var folder = path.join(IRL_ROOT, ...folderParts)
+    var fileName = charName + '.fassung'
+    var filePath = path.join(folder, fileName)
+
+    ensureDir(folder)
+
+    // the fassung gets the iddress baked in + the bundle data
+    var fassungContent = Object.assign({ iddress: iddress }, bundleData)
+    fs.writeFileSync(filePath, JSON.stringify(fassungContent, null, 2), 'utf-8')
+    console.log('irl: bundle created — ' + filePath)
+
+    // add iddress to character's bundles array
+    var charPath = characterPath(data.character)
+    if (fs.existsSync(charPath)) {
+        var raw = fs.readFileSync(charPath, 'utf-8')
+        var character = JSON.parse(raw)
+        if (!character.bundles) character.bundles = []
+        // avoid duplicates
+        var iddressKey = iddress.join('/')
+        var exists = character.bundles.some(function (b) {
+            return (Array.isArray(b) ? b.join('/') : '') === iddressKey
+        })
+        if (!exists) {
+            character.bundles.push(iddress)
+            fs.writeFileSync(charPath, JSON.stringify(character, null, 2), 'utf-8')
+            console.log('irl: bundle iddress added to ' + data.character)
+        }
+    }
+
+    return { saved: true, path: path.relative(IRL_ROOT, filePath).replace(/\\/g, '/'), iddress: iddress }
+}
+
 // ─── UTILS ────────────────────────────────────────────
 
 function walkFiles(dir, extension, callback) {
@@ -301,6 +339,7 @@ module.exports = {
     handleShipList: handleShipList,
     handleFassungSave: handleFassungSave,
     handleFassungList: handleFassungList,
+    handleBundleCreate: handleBundleCreate,
     IRL_ROOT: IRL_ROOT,
     PREPLANNER_BASE: PREPLANNER_BASE,
     BACKSTAGE_BASE: BACKSTAGE_BASE

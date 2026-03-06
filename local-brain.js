@@ -220,6 +220,9 @@ function handleDataMessage(clientId, raw) {
             case 'irl.fassung.list':
                 response.data = irl.handleFassungList(data)
                 break
+            case 'irl.bundle.create':
+                response.data = irl.handleBundleCreate(data)
+                break
             case 'ping':
                 response.data = { pong: true }
                 break
@@ -285,6 +288,7 @@ function handleRelayMessage(clientId, payload) {
             case 'irl.ship.list': response.data = irl.handleShipList(data); break
             case 'irl.fassung.save': response.data = irl.handleFassungSave(data); break
             case 'irl.fassung.list': response.data = irl.handleFassungList(data); break
+            case 'irl.bundle.create': response.data = irl.handleBundleCreate(data); break
             case 'ping': response.data = { pong: true }; break
             default: response.error = 'unknown type: ' + type
         }
