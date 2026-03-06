@@ -7,6 +7,7 @@
 var werift = require('werift')
 var WebSocket = require('ws')
 var irl = require('./irl_handlers')
+var hyph = require('./hyph.handlers')
 var stripeEnergy = require('./stripe-energy')
 
 // ─── CONFIG ───
@@ -199,29 +200,14 @@ function handleDataMessage(clientId, raw) {
 
     try {
         switch (type) {
-            case 'irl.signup':
-                response.data = irl.handleSignUp(data)
+            case 'hyph.ead':
+                response.data = hyph.ead(data)
                 break
-            case 'irl.signin':
-                response.data = irl.handleSignIn(data)
+            case 'hyph.ead.folder':
+                response.data = hyph.ead.folder(data)
                 break
-            case 'irl.ship.save':
-                response.data = irl.handleShipSave(data)
-                break
-            case 'irl.ship.load':
-                response.data = irl.handleShipLoad(data)
-                break
-            case 'irl.ship.list':
-                response.data = irl.handleShipList(data)
-                break
-            case 'irl.fassung.save':
-                response.data = irl.handleFassungSave(data)
-                break
-            case 'irl.fassung.list':
-                response.data = irl.handleFassungList(data)
-                break
-            case 'irl.bundle.create':
-                response.data = irl.handleBundleCreate(data)
+            case 'hyph.ite':
+                response.data = hyph.ite(data)
                 break
             case 'ping':
                 response.data = { pong: true }
@@ -281,14 +267,9 @@ function handleRelayMessage(clientId, payload) {
 
     try {
         switch (type) {
-            case 'irl.signup': response.data = irl.handleSignUp(data); break
-            case 'irl.signin': response.data = irl.handleSignIn(data); break
-            case 'irl.ship.save': response.data = irl.handleShipSave(data); break
-            case 'irl.ship.load': response.data = irl.handleShipLoad(data); break
-            case 'irl.ship.list': response.data = irl.handleShipList(data); break
-            case 'irl.fassung.save': response.data = irl.handleFassungSave(data); break
-            case 'irl.fassung.list': response.data = irl.handleFassungList(data); break
-            case 'irl.bundle.create': response.data = irl.handleBundleCreate(data); break
+            case 'hyph.ead': response.data = hyph.ead(data); break
+            case 'hyph.ead.folder': response.data = hyph.ead.folder(data); break
+            case 'hyph.ite': response.data = hyph.ite(data); break
             case 'ping': response.data = { pong: true }; break
             default: response.error = 'unknown type: ' + type
         }

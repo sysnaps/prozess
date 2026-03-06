@@ -508,22 +508,28 @@ wss.on('connection', function (ws) {
                     break
 
                 // ════════════════════════════════════
-                // HYPH HANDLERS
+                // HYPH — relayed to local brain (data lives there)
                 // ════════════════════════════════════
                 case 'hyph.ead':
-                    try { response.data = hyph.ead(data) }
-                    catch (e) { response.error = e.message }
-                    break
-
                 case 'hyph.ead.folder':
-                    try { response.data = hyph.ead.folder(data) }
-                    catch (e) { response.error = e.message }
-                    break
-
-                case 'hyph.ite':
-                    try { response.data = hyph.ite(data) }
-                    catch (e) { response.error = e.message }
-                    break
+                case 'hyph.ite': {
+                    var hyphBrainIds = Object.keys(brains)
+                    if (hyphBrainIds.length === 0) {
+                        response.error = 'no brain connected'
+                        break
+                    }
+                    var hyphBrain = brains[hyphBrainIds[0]]
+                    if (!hyphBrain || hyphBrain.readyState !== WebSocket.OPEN) {
+                        response.error = 'brain offline'
+                        break
+                    }
+                    hyphBrain.send(JSON.stringify({
+                        type: 'relay.message',
+                        clientId: clientInfo ? clientInfo.id : 'unknown',
+                        payload: { id: id, type: type, data: data }
+                    }))
+                    return
+                }
 
                 case 'qugit.lookup':
                     try { response.data = i.qugit.lookup(data) }
@@ -736,15 +742,12 @@ wss.on('connection', function (ws) {
                 }
 
                 case 'relay.response': {
-                    // brain sending relay response back to client
+                    // brain sending relay response back to client — unwrap so client gets {id, data} directly
                     var relayClientId = parsed.clientId || data.clientId
                     var relayRespPayload = parsed.payload || data.payload
                     var targetClient3 = findClientById(relayClientId)
-                    if (targetClient3) {
-                        targetClient3.send(JSON.stringify({
-                            type: 'relay.response',
-                            payload: relayRespPayload
-                        }))
+                    if (targetClient3 && targetClient3.readyState === WebSocket.OPEN) {
+                        targetClient3.send(JSON.stringify(relayRespPayload))
                     }
                     return
                 }
