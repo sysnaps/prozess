@@ -214,34 +214,34 @@ function handleDataMessage(clientId, raw) {
             case 'hyph.resolve':
                 response.data = resolve.irlink(data)
                 break
-            case 'globe.walk':
+            case '!globe.walk':
                 response.data = globe.walk(data.entity, data.points)
                 break
-            case 'globe.thrigit':
+            case '!globe.thrigit':
                 response.data = globe.thrigit(data)
                 break
-            case 'globe.place':
+            case '!globe.place':
                 response.data = globe.place(data)
                 break
-            case 'globe.reslice':
+            case '!globe.reslice':
                 response.data = globe.reslice(data.folder, data.start, data.end)
                 break
-            case 'globe.read':
+            case '!globe.read':
                 response.data = globe.read(data.folder)
                 break
-            case 'globe.find':
+            case '!globe.find':
                 response.data = globe.find(data.folder, data.name)
                 break
-            case 'globe.lookup':
+            case '!globe.lookup':
                 response.data = globe.lookup.deep(data.entity, data.tofu)
                 break
-            case 'globe.entity':
+            case '!globe.entity':
                 response.data = globe.entity(data.entity, data.name)
                 break
-            case 'globe.demon':
+            case '!globe.demon':
                 response.data = globe.demon(data.parent, data.type)
                 break
-            case 'globe.demon.value':
+            case '!globe.demon.value':
                 response.data = globe.demon.value(data.entity, data.type, data.amount)
                 break
             case 'ping':
@@ -306,16 +306,16 @@ function handleRelayMessage(clientId, payload) {
             case 'hyph.ead.folder': response.data = hyph.ead.folder(data); break
             case 'hyph.ite': response.data = hyph.ite(data); break
             case 'hyph.resolve': response.data = resolve.irlink(data); break
-            case 'globe.walk': response.data = globe.walk(data.entity, data.points); break
-            case 'globe.thrigit': response.data = globe.thrigit(data); break
-            case 'globe.place': response.data = globe.place(data); break
-            case 'globe.reslice': response.data = globe.reslice(data.folder, data.start, data.end); break
-            case 'globe.read': response.data = globe.read(data.folder); break
-            case 'globe.find': response.data = globe.find(data.folder, data.name); break
-            case 'globe.lookup': response.data = globe.lookup.deep(data.entity, data.tofu); break
-            case 'globe.entity': response.data = globe.entity(data.entity, data.name); break
-            case 'globe.demon': response.data = globe.demon(data.parent, data.type); break
-            case 'globe.demon.value': response.data = globe.demon.value(data.entity, data.type, data.amount); break
+            case '!globe.walk': response.data = globe.walk(data.entity, data.points); break
+            case '!globe.thrigit': response.data = globe.thrigit(data); break
+            case '!globe.place': response.data = globe.place(data); break
+            case '!globe.reslice': response.data = globe.reslice(data.folder, data.start, data.end); break
+            case '!globe.read': response.data = globe.read(data.folder); break
+            case '!globe.find': response.data = globe.find(data.folder, data.name); break
+            case '!globe.lookup': response.data = globe.lookup.deep(data.entity, data.tofu); break
+            case '!globe.entity': response.data = globe.entity(data.entity, data.name); break
+            case '!globe.demon': response.data = globe.demon(data.parent, data.type); break
+            case '!globe.demon.value': response.data = globe.demon.value(data.entity, data.type, data.amount); break
             case 'ping': response.data = { pong: true }; break
             default: response.error = 'unknown type: ' + type
         }
