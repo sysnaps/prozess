@@ -513,7 +513,17 @@ wss.on('connection', function (ws) {
                 case 'hyph.ead':
                 case 'hyph.ead.folder':
                 case 'hyph.ite':
-                case 'hyph.resolve': {
+                case 'hyph.resolve':
+                case 'globe.walk':
+                case 'globe.thrigit':
+                case 'globe.place':
+                case 'globe.reslice':
+                case 'globe.read':
+                case 'globe.find':
+                case 'globe.lookup':
+                case 'globe.entity':
+                case 'globe.demon':
+                case 'globe.demon.value': {
                     var hyphBrainIds = Object.keys(brains)
                     if (hyphBrainIds.length === 0) {
                         response.error = 'no brain connected'
