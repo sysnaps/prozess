@@ -8,6 +8,7 @@ var werift = require('werift')
 var WebSocket = require('ws')
 var irl = require('./irl_handlers')
 var hyph = require('./hyph.handlers')
+var resolve = require('./resolve')
 var stripeEnergy = require('./stripe-energy')
 
 // ─── CONFIG ───
@@ -209,6 +210,9 @@ function handleDataMessage(clientId, raw) {
             case 'hyph.ite':
                 response.data = hyph.ite(data)
                 break
+            case 'hyph.resolve':
+                response.data = resolve.irlink(data)
+                break
             case 'ping':
                 response.data = { pong: true }
                 break
@@ -270,6 +274,7 @@ function handleRelayMessage(clientId, payload) {
             case 'hyph.ead': response.data = hyph.ead(data); break
             case 'hyph.ead.folder': response.data = hyph.ead.folder(data); break
             case 'hyph.ite': response.data = hyph.ite(data); break
+            case 'hyph.resolve': response.data = resolve.irlink(data); break
             case 'ping': response.data = { pong: true }; break
             default: response.error = 'unknown type: ' + type
         }
