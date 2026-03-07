@@ -523,7 +523,11 @@ wss.on('connection', function (ws) {
                 case '!globe.lookup':
                 case '!globe.entity':
                 case '!globe.demon':
-                case '!globe.demon.value': {
+                case '!globe.demon.value':
+                case '!bumbers.assign':
+                case '!bumbers.get':
+                case '!bumbers.list':
+                case '!bumbers.batch': {
                     var hyphBrainIds = Object.keys(brains)
                     if (hyphBrainIds.length === 0) {
                         response.error = 'no brain connected'

@@ -10,6 +10,7 @@ var irl = require('./irl_handlers')
 var hyph = require('./hyph.handlers')
 var resolve = require('./resolve')
 var globe = require('./globe')
+var bumbers = require('./bumbers')
 var stripeEnergy = require('./stripe-energy')
 
 // ─── CONFIG ───
@@ -23,6 +24,7 @@ var SIGNAL_URL = process.argv.includes('--signal')
 
 // ─── INIT ───
 irl.init()
+bumbers.init()
 console.log('local-brain: data root at ' + irl.IRL_ROOT)
 console.log('local-brain: brain-id = ' + BRAIN_ID)
 console.log('local-brain: connecting to signaling server at ' + SIGNAL_URL)
@@ -244,6 +246,18 @@ function handleDataMessage(clientId, raw) {
             case '!globe.demon.value':
                 response.data = globe.demon.value(data.entity, data.type, data.amount)
                 break
+            case '!bumbers.assign':
+                response.data = bumbers.assign(data)
+                break
+            case '!bumbers.get':
+                response.data = bumbers.get(data)
+                break
+            case '!bumbers.list':
+                response.data = bumbers.list()
+                break
+            case '!bumbers.batch':
+                response.data = bumbers.batch(data)
+                break
             case 'ping':
                 response.data = { pong: true }
                 break
@@ -316,6 +330,10 @@ function handleRelayMessage(clientId, payload) {
             case '!globe.entity': response.data = globe.entity(data.entity, data.name); break
             case '!globe.demon': response.data = globe.demon(data.parent, data.type); break
             case '!globe.demon.value': response.data = globe.demon.value(data.entity, data.type, data.amount); break
+            case '!bumbers.assign': response.data = bumbers.assign(data); break
+            case '!bumbers.get': response.data = bumbers.get(data); break
+            case '!bumbers.list': response.data = bumbers.list(); break
+            case '!bumbers.batch': response.data = bumbers.batch(data); break
             case 'ping': response.data = { pong: true }; break
             default: response.error = 'unknown type: ' + type
         }
