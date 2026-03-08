@@ -88,8 +88,6 @@ function handleSave(data, senderActor) {
     // Stamp metadata
     if (fassungData) {
         if (!fassungData.time) fassungData.time = {}
-        if (!fassungData.time.created) fassungData.time.created = Date.now()
-        fassungData.time.modified = Date.now()
         if (senderActor && !fassungData.creator) {
             fassungData.creator = senderActor
         }

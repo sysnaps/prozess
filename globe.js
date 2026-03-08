@@ -1,17 +1,16 @@
 // globe.js — globe calculation engine
 // the globe maps thrigit numbers to names in the tofu address space
 // zerox realm 1 = irlinks (globe)
-// zerox realm 2 = strands (ring)
 // zerox realm 3 = demons (Maxwell's Demons — counters/occurrences)
 //
 // files live at D:\hyph\r\globes\[entity]\[number]\...
 // dot-files: .700001 → {"700001": "q"}
-// folders: 700001/ → children of that concept
+// folders: 700001/ → continents (children of that concept)
 //
 // partition logic:
 //   start = minschärfe (the concept as a whole)
-//   children assigned bottom-up after minschärfe
-//   remainder → restschärfe at the top
+//   continents assigned bottom-up after minschärfe
+//   remainder → restschärfe at the top (only when remainder > 0)
 
 var fs = require('fs')
 var path = require('path')
@@ -126,11 +125,15 @@ globe.partition = function (start, end, names) {
 }
 
 // ─── WALK ───
-// traverse the globe tree from entity root following named points
+// traverse a numbered tree from root following named points
 // returns the concept's address and range at the deepest level
 // entity = "000000000003", points = ["q", "IRLBar"]
-globe.walk = function (entity, points) {
-    var base = "r/globes/" + entity
+// opts.base overrides the folder root (default: "r/globes/" + entity)
+// opts.max overrides the open range ceiling (default: 1110000)
+globe.walk = function (entity, points, opts) {
+    opts = opts || {}
+    var base = opts.base || ("r/globes/" + entity)
+    var max = opts.max || 1110000
     var result = { entity: entity, points: points, steps: [], exists: false }
 
     var folder = base
@@ -188,7 +191,7 @@ globe.walk = function (entity, points) {
             range_end = ceiling - 1
         } else {
             // no restschärfe, no next sibling — open range
-            range_end = 1110000
+            range_end = max
         }
 
         result.steps.push({
@@ -298,18 +301,22 @@ globe.demon.value = function (entity, type, amount) {
 }
 
 // ─── PLACE ───
-// place a new concept on the globe
+// place a new concept in a numbered tree
 // reslices all siblings at that level
 //
 // data = { entity, parent (points array), name }
+// data.base overrides the folder root (default: "r/globes/" + entity)
+// data.root = { start, end } overrides the root range (default: 1, 900000)
 // returns the new partition after placement
 globe.place = function (data) {
     var entity = data.entity
     var parent = data.parent || []
     var name = data.name
+    var base = data.base || ("r/globes/" + entity)
+    var root = data.root || { start: 210001, end: 1110000 }
 
     // find the parent folder
-    var folder = "r/globes/" + entity
+    var folder = base
     for (var idx = 0; idx < parent.length; idx++) {
         var walked = globe.find(folder, parent[idx])
         if (!walked) return { error: "parent not found: " + parent[idx] }
@@ -331,13 +338,11 @@ globe.place = function (data) {
     var parent_end = null
 
     if (parent.length === 0) {
-        // entity root — use full range for now
-        // in practice this would come from the entity's globe config
-        parent_start = 1
-        parent_end = 900000
+        parent_start = root.start
+        parent_end = root.end
     } else {
         // get range from walking to parent
-        var parent_walk = globe.walk(entity, parent)
+        var parent_walk = globe.walk(entity, parent, { base: base, max: root.end })
         if (!parent_walk.exists) return { error: "could not walk to parent" }
         parent_start = parent_walk.start
         parent_end = parent_walk.end
@@ -483,16 +488,18 @@ globe.write.partition = function (folder, partition) {
         if (!fs.existsSync(child_dir)) fs.mkdirSync(child_dir, { recursive: true })
     }
 
-    // write restschärfe
+    // write restschärfe only when there is actual remainder
     var rest = partition.rest
-    var rest_filename = "." + rest.start
-    var rest_content = {}
-    rest_content[rest.start] = rest.name
-    fs.writeFileSync(
-        path.join(dir, rest_filename),
-        JSON.stringify(rest_content, null, 4),
-        'utf-8'
-    )
+    if (rest && rest.start <= rest.end) {
+        var rest_filename = "." + rest.start
+        var rest_content = {}
+        rest_content[rest.start] = rest.name
+        fs.writeFileSync(
+            path.join(dir, rest_filename),
+            JSON.stringify(rest_content, null, 4),
+            'utf-8'
+        )
+    }
 }
 
 // write a single entry
@@ -542,13 +549,17 @@ globe.copy.recursive = function (src, dest) {
 
     if (!fs.existsSync(dest)) fs.mkdirSync(dest, { recursive: true })
 
-    var entries = fs.readdirSync(src, { withFileTypes: true })
-    for (var idx = 0; idx < entries.length; idx++) {
-        var entry = entries[idx]
-        globe.copy.recursive(
-            path.join(src, entry.name),
-            path.join(dest, entry.name)
-        )
+    try {
+        var entries = fs.readdirSync(src, { withFileTypes: true })
+        for (var idx = 0; idx < entries.length; idx++) {
+            var entry = entries[idx]
+            globe.copy.recursive(
+                path.join(src, entry.name),
+                path.join(dest, entry.name)
+            )
+        }
+    } catch (e) {
+        if (e.code !== 'ENOENT') throw e
     }
 }
 
@@ -556,19 +567,11 @@ globe.copy.recursive = function (src, dest) {
 globe.remove = {}
 globe.remove.recursive = function (target) {
     if (!fs.existsSync(target)) return
-
-    var stat = fs.statSync(target)
-    if (stat.isFile()) {
-        fs.unlinkSync(target)
-        return
+    try {
+        fs.rmSync(target, { recursive: true, force: true, maxRetries: 3, retryDelay: 100 })
+    } catch (e) {
+        console.warn("globe.remove.recursive: could not remove", target, e.code)
     }
-
-    var entries = fs.readdirSync(target, { withFileTypes: true })
-    for (var idx = 0; idx < entries.length; idx++) {
-        globe.remove.recursive(path.join(target, entries[idx].name))
-    }
-
-    fs.rmdirSync(target)
 }
 
 // ─── ENTITY GLOBE ───
@@ -625,8 +628,12 @@ globe.lookup = function (folder, number) {
 // ─── DEEP LOOKUP ───
 // given a tofu number and entity, find the full path of names
 // walks the tree until the number is found at a leaf
-globe.lookup.deep = function (entity, tofu) {
-    var folder = "r/globes/" + entity
+// opts.base overrides the folder root (default: "r/globes/" + entity)
+// opts.max overrides the open range ceiling (default: 1110000)
+globe.lookup.deep = function (entity, tofu, opts) {
+    opts = opts || {}
+    var folder = opts.base || ("r/globes/" + entity)
+    var max = opts.max || 1110000
     var names = []
 
     var searching = true
@@ -665,8 +672,8 @@ globe.lookup.deep = function (entity, tofu) {
                 break
             }
 
-            // range end: next sibling - 1, or ceiling - 1, or open (1110000)
-            var range_end = next ? next.number - 1 : (ceiling ? ceiling - 1 : 1110000)
+            // range end: next sibling - 1, or ceiling - 1, or max
+            var range_end = next ? next.number - 1 : (ceiling ? ceiling - 1 : max)
 
             if (tofu >= child.number && tofu <= range_end) {
                 names.push(child.name)

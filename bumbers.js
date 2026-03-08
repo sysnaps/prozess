@@ -20,7 +20,7 @@ bumbers.path = "i/init/collection.buffers"
 bumbers.registry = null
 
 bumbers.load = function () {
-    var result = hyph.ead({ irpath: bumbers.path })
+    var result = hyph.read({ irpath: bumbers.path })
     if (result.exists && result.data) {
         bumbers.registry = result.data
     } else {

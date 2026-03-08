@@ -4,6 +4,7 @@
 
 var fs = require('fs')
 var path = require('path')
+var child_process = require('child_process')
 
 var hyph = {}
 
@@ -11,7 +12,7 @@ hyph.root = process.platform === 'win32'
     ? path.join('D:', 'hyph')
     : (process.env.HYPH_ROOT || './hyph-data')
 
-hyph.ead = function (data) {
+hyph.read = function (data) {
     if (!data.irpath) throw new Error('irpath required')
 
     var segments = data.irpath
@@ -50,7 +51,7 @@ hyph.ead = function (data) {
 
 // recursive read — returns the dot-prefixed file + all subfolders with their files
 // { exists: true, data: { ".": {...}, "conditions/.active": {...}, ... } }
-hyph.ead.folder = function (data) {
+hyph.read.folder = function (data) {
     if (!data.irpath) throw new Error('irpath required')
 
     var segments = data.irpath
@@ -80,6 +81,26 @@ hyph.ead.folder = function (data) {
             var abs = path.join(dir, entry.name)
 
             if (entry.isFile()) {
+                // .lnk shortcut resolution — resolve target and include data under shortcut key
+                if (entry.name.endsWith('.lnk')) {
+                    var target = hyph.resolve.lnk(abs)
+                    if (target && fs.existsSync(target)) {
+                        // strip .lnk to get the shortcut key
+                        var shortkey = entry.name.slice(0, -4)
+                        var shortrel = prefix ? prefix + '/' + shortkey : shortkey
+
+                        var tstat = fs.statSync(target)
+                        if (tstat.isFile()) {
+                            var traw = fs.readFileSync(target, 'utf-8')
+                            try { files[shortrel] = JSON.parse(traw) }
+                            catch (e) { files[shortrel] = traw }
+                        } else if (tstat.isDirectory()) {
+                            walk(target, shortrel)
+                        }
+                    }
+                    continue
+                }
+
                 var raw = fs.readFileSync(abs, 'utf-8')
                 try {
                     files[rel] = JSON.parse(raw)
@@ -132,6 +153,28 @@ hyph.ite = function (data) {
 
     console.log('hyph.ite:', full)
     return { written: true, irpath: data.irpath }
+}
+
+// ─── SHORTCUT RESOLUTION ───
+hyph.resolve = {}
+
+// resolve a Windows .lnk shortcut to its target path
+hyph.resolve.lnk = function (lnkpath) {
+    if (process.platform !== 'win32') return null
+
+    try {
+        // use powershell with single-quoted path inside the command
+        var escaped = lnkpath.replace(/'/g, "''")
+        var ps = "$s=(New-Object -ComObject WScript.Shell).CreateShortcut('" + escaped + "');$s.TargetPath"
+        var result = child_process.execSync(
+            'powershell.exe -NoProfile -NoLogo -Command "' + ps.replace(/"/g, '\\"') + '"',
+            { encoding: 'utf-8', timeout: 5000 }
+        )
+        return result.trim() || null
+    } catch (e) {
+        console.warn("hyph.resolve.lnk failed:", lnkpath, e.message)
+        return null
+    }
 }
 
 module.exports = hyph

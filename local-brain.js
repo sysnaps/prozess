@@ -12,6 +12,10 @@ var resolve = require('./resolve')
 var globe = require('./globe')
 var bumbers = require('./bumbers')
 var stripeEnergy = require('./stripe-energy')
+var convert = require('./convert')
+var egg = require('./egg')
+var entnum = require('./entnum')
+var incoming = require('./seri/incoming')
 
 // ─── CONFIG ───
 var BRAIN_ID = process.argv.includes('--brain-id')
@@ -25,6 +29,7 @@ var SIGNAL_URL = process.argv.includes('--signal')
 // ─── INIT ───
 irl.init()
 bumbers.init()
+entnum.init()
 console.log('local-brain: data root at ' + irl.IRL_ROOT)
 console.log('local-brain: brain-id = ' + BRAIN_ID)
 console.log('local-brain: connecting to signaling server at ' + SIGNAL_URL)
@@ -35,6 +40,7 @@ var peers = {} // clientId → { pc, dataChannel }
 // ─── SIGNALING CONNECTION ───
 var ws = null
 var reconnectTimer = null
+var keepaliveTimer = null
 
 function connectSignaling() {
     ws = new WebSocket(SIGNAL_URL)
@@ -45,6 +51,14 @@ function connectSignaling() {
             type: 'brain.register',
             brainId: BRAIN_ID
         }))
+
+        // keepalive: ping every 25s to prevent idle disconnect
+        if (keepaliveTimer) clearInterval(keepaliveTimer)
+        keepaliveTimer = setInterval(function () {
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({ type: 'brain.ping', brainId: BRAIN_ID }))
+            }
+        }, 25000)
     })
 
     ws.on('message', function (raw) {
@@ -57,6 +71,8 @@ function connectSignaling() {
     })
 
     ws.on('close', function () {
+        if (keepaliveTimer) clearInterval(keepaliveTimer)
+        keepaliveTimer = null
         console.log('local-brain: signaling disconnected, reconnecting in 4s...')
         scheduleReconnect()
     })
@@ -183,8 +199,8 @@ async function handleIceCandidate(clientId, candidate) {
 function cleanupPeer(clientId) {
     var peer = peers[clientId]
     if (!peer) return
-    try { if (peer.dataChannel) peer.dataChannel.close() } catch (e) {}
-    try { peer.pc.close() } catch (e) {}
+    try { if (peer.dataChannel) peer.dataChannel.close() } catch (e) { }
+    try { peer.pc.close() } catch (e) { }
     delete peers[clientId]
 }
 
@@ -204,11 +220,11 @@ function handleDataMessage(clientId, raw) {
 
     try {
         switch (type) {
-            case 'hyph.ead':
-                response.data = hyph.ead(data)
+            case 'hyph.read':
+                response.data = hyph.read(data)
                 break
-            case 'hyph.ead.folder':
-                response.data = hyph.ead.folder(data)
+            case 'hyph.read.folder':
+                response.data = hyph.read.folder(data)
                 break
             case 'hyph.ite':
                 response.data = hyph.ite(data)
@@ -257,6 +273,43 @@ function handleDataMessage(clientId, raw) {
                 break
             case '!bumbers.batch':
                 response.data = bumbers.batch(data)
+                break
+            case '!entnum.assign':
+                response.data = entnum.assign(data.handle)
+                break
+            case '!entnum.get':
+                response.data = entnum.get(data.handle)
+                break
+            case '!entnum.list':
+                response.data = entnum.list()
+                break
+            case '!convert.all':
+                response.data = convert.all()
+                break
+            case '!convert.ink':
+                response.data = convert.ink(data)
+                break
+            case '!convert.character':
+                response.data = convert.character(data)
+                break
+            case '!convert.bees':
+                response.data = convert.bees(data)
+                break
+            case '!egg.seed':
+                response.data = egg.seed(data.entity, data.ring, data.data)
+                break
+            case '!egg.hatch':
+                response.data = egg.hatch(data.handle)
+                break
+            case '!egg.lookup.ring':
+                response.data = egg.lookup.ring(data.ring, data.address)
+                break
+            case '!egg.lookup.concept':
+                response.data = egg.lookup.concept(data.ring, data.concept)
+                break
+            case 'seri.incoming':
+                incoming(data)
+                response.data = { received: true }
                 break
             case 'ping':
                 response.data = { pong: true }
@@ -316,8 +369,8 @@ function handleRelayMessage(clientId, payload) {
 
     try {
         switch (type) {
-            case 'hyph.ead': response.data = hyph.ead(data); break
-            case 'hyph.ead.folder': response.data = hyph.ead.folder(data); break
+            case 'hyph.read': response.data = hyph.read(data); break
+            case 'hyph.read.folder': response.data = hyph.read.folder(data); break
             case 'hyph.ite': response.data = hyph.ite(data); break
             case 'hyph.resolve': response.data = resolve.irlink(data); break
             case '!globe.walk': response.data = globe.walk(data.entity, data.points); break
@@ -334,6 +387,18 @@ function handleRelayMessage(clientId, payload) {
             case '!bumbers.get': response.data = bumbers.get(data); break
             case '!bumbers.list': response.data = bumbers.list(); break
             case '!bumbers.batch': response.data = bumbers.batch(data); break
+            case '!entnum.assign': response.data = entnum.assign(data.handle); break
+            case '!entnum.get': response.data = entnum.get(data.handle); break
+            case '!entnum.list': response.data = entnum.list(); break
+            case '!convert.all': response.data = convert.all(); break
+            case '!convert.ink': response.data = convert.ink(data); break
+            case '!convert.character': response.data = convert.character(data); break
+            case '!convert.bees': response.data = convert.bees(data); break
+            case '!egg.seed': response.data = egg.seed(data.entity, data.ring, data.data); break
+            case '!egg.hatch': response.data = egg.hatch(data.handle); break
+            case '!egg.lookup.ring': response.data = egg.lookup.ring(data.ring, data.address); break
+            case '!egg.lookup.concept': response.data = egg.lookup.concept(data.ring, data.concept); break
+            case 'seri.incoming': incoming(data); response.data = { received: true }; break
             case 'ping': response.data = { pong: true }; break
             default: response.error = 'unknown type: ' + type
         }

@@ -189,7 +189,6 @@ function handleAuth(data) {
             name: data.name,
             hash: result.hash,
             salt: result.salt,
-            created: Date.now()
         }
         saveActors(actors)
         console.log('prozess: new actor — ' + key)
@@ -216,7 +215,6 @@ function handleAuth(data) {
                 },
                 werte: {
                     authenticated: [true],
-                    session: [Date.now()]
                 }
             }
         }
@@ -251,7 +249,6 @@ function handleAuth(data) {
             },
             werte: {
                 authenticated: [true],
-                session: [Date.now()]
             }
         }
     }
@@ -312,7 +309,7 @@ function broadcastToOthers(senderWs, eventType, eventData) {
 
 wss.on('connection', function (ws) {
     var thisId = ++clientId
-    clients.set(ws, { id: thisId, actor: null, connectedAt: Date.now() })
+    clients.set(ws, { id: thisId, actor: null })
     console.log('prozess: client ' + thisId + ' connected (' + clients.size + ' total)')
     broadcastPresence()
 
@@ -510,8 +507,8 @@ wss.on('connection', function (ws) {
                 // ════════════════════════════════════
                 // HYPH — relayed to local brain (data lives there)
                 // ════════════════════════════════════
-                case 'hyph.ead':
-                case 'hyph.ead.folder':
+                case 'hyph.read':
+                case 'hyph.read.folder':
                 case 'hyph.ite':
                 case 'hyph.resolve':
                 case '!globe.walk':
@@ -527,7 +524,15 @@ wss.on('connection', function (ws) {
                 case '!bumbers.assign':
                 case '!bumbers.get':
                 case '!bumbers.list':
-                case '!bumbers.batch': {
+                case '!bumbers.batch':
+                case '!convert.all':
+                case '!convert.ink':
+                case '!convert.character':
+                case '!convert.bees':
+                case '!egg.seed':
+                case '!egg.hatch':
+                case '!egg.lookup.ring':
+                case '!egg.lookup.concept': {
                     var hyphBrainIds = Object.keys(brains)
                     if (hyphBrainIds.length === 0) {
                         response.error = 'no brain connected'
@@ -632,7 +637,7 @@ wss.on('connection', function (ws) {
                         var resp = { id: energyResponseId, data: null, error: null }
                         if (err) resp.error = err.message
                         else resp.data = result
-                        try { ws.send(JSON.stringify(resp)) } catch (e) {}
+                        try { ws.send(JSON.stringify(resp)) } catch (e) { }
                     })
                     return // async — don't send response now
                 }
@@ -645,7 +650,7 @@ wss.on('connection', function (ws) {
                         var resp = { id: checkResponseId, data: null, error: null }
                         if (err) resp.error = err.message
                         else resp.data = result
-                        try { ws.send(JSON.stringify(resp)) } catch (e) {}
+                        try { ws.send(JSON.stringify(resp)) } catch (e) { }
                     })
                     return // async
                 }

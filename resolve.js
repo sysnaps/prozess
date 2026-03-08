@@ -103,7 +103,7 @@ resolve.walk = function (base, points, flags) {
     for (var p = 0; p < points.length; p++) {
         // dot file at current level
         var dotpath = dir + "/." + points[p]
-        var df = hyph.ead({ irpath: dotpath })
+        var df = hyph.read({ irpath: dotpath })
         if (df.exists) results[dotpath] = df.data
 
         // descend into folder
@@ -112,7 +112,7 @@ resolve.walk = function (base, points, flags) {
 
     // folder contents at deepest level (unless shallow)
     if (!flags || !flags.shallow) {
-        var folder = hyph.ead.folder({ irpath: dir })
+        var folder = hyph.read.folder({ irpath: dir })
         if (folder.exists && folder.data) {
             for (var key in folder.data) {
                 results[dir + "/" + key] = folder.data[key]
@@ -140,20 +140,20 @@ resolve.base = function (data, irpath, flags) {
         var parent = points.length > 1 ? points.slice(0, -1).join("/") : ""
         var dotpath = parent ? parent + "/." + last : "." + last
 
-        var df = hyph.ead({ irpath: dotpath })
+        var df = hyph.read({ irpath: dotpath })
         if (!df.exists) return { exists: false, irlink: data.irlink, type: "base" }
         return { exists: true, irlink: data.irlink, type: "base", data: { ".": df.data } }
     }
 
-    // normal — hyph.ead.folder gets dot file (as ".") + all folder contents
-    var folder = hyph.ead.folder({ irpath: dir })
+    // normal — hyph.read.folder gets dot file (as ".") + all folder contents
+    var folder = hyph.read.folder({ irpath: dir })
     if (!folder.exists) {
         // folder does not exist — try just the dot file
         var last2 = points[points.length - 1]
         var parent2 = points.length > 1 ? points.slice(0, -1).join("/") : ""
         var dotpath2 = parent2 ? parent2 + "/." + last2 : "." + last2
 
-        var df2 = hyph.ead({ irpath: dotpath2 })
+        var df2 = hyph.read({ irpath: dotpath2 })
         if (!df2.exists) return { exists: false, irlink: data.irlink, type: "base" }
         return { exists: true, irlink: data.irlink, type: "base", data: { ".": df2.data } }
     }
@@ -174,16 +174,16 @@ resolve.entity = function (data, irpath, flags) {
     if (extra.length === 0) {
         if (flags && flags.shallow) {
             // file only
-            var df = hyph.ead({ irpath: base + "/." + handle })
+            var df = hyph.read({ irpath: base + "/." + handle })
             if (!df.exists) return { exists: false, irlink: data.irlink, type: "entity", entity: etype }
             return { exists: true, irlink: data.irlink, type: "entity", entity: etype, data: { ".": df.data } }
         }
 
-        // dot file + full folder — hyph.ead.folder reads both
-        var folder = hyph.ead.folder({ irpath: base + "/" + handle })
+        // dot file + full folder — hyph.read.folder reads both
+        var folder = hyph.read.folder({ irpath: base + "/" + handle })
         if (!folder.exists) {
             // try just the dot file
-            var df2 = hyph.ead({ irpath: base + "/." + handle })
+            var df2 = hyph.read({ irpath: base + "/." + handle })
             if (!df2.exists) return { exists: false, irlink: data.irlink, type: "entity", entity: etype }
             return { exists: true, irlink: data.irlink, type: "entity", entity: etype, data: { ".": df2.data } }
         }
@@ -195,7 +195,7 @@ resolve.entity = function (data, irpath, flags) {
     var walked = resolve.walk(base + "/" + handle, extra, flags)
 
     // also include the entity dot file
-    var dotfile = hyph.ead({ irpath: base + "/." + handle })
+    var dotfile = hyph.read({ irpath: base + "/." + handle })
     if (dotfile.exists) walked.files["."] = dotfile.data
 
     return { exists: true, irlink: data.irlink, type: "entity", entity: etype, data: walked.files }
@@ -216,7 +216,7 @@ resolve.plain = function (data, irpath, flags) {
     // viewpoint: selected character at deepest level
     if (data.selected && (!flags || !flags.shallow)) {
         var viewpath = walked.dir + "/." + data.selected
-        var vf = hyph.ead({ irpath: viewpath })
+        var vf = hyph.read({ irpath: viewpath })
         if (vf.exists) walked.files[viewpath] = vf.data
     }
 
@@ -233,7 +233,7 @@ resolve.strand = function (data, irpath, flags) {
     if (points.length === 0) return { exists: false, irlink: data.irlink, type: "strand", error: "empty strand" }
 
     // read ring data to find zone/triangle for the turbo (first point)
-    var ringfile = hyph.ead({ irpath: "i/rings/." + ring })
+    var ringfile = hyph.read({ irpath: "i/rings/." + ring })
     var ringdata = ringfile.exists ? ringfile.data : null
 
     // zone/triangle lookup
