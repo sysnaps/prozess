@@ -1,7 +1,0 @@
-{
-    "body": {
-        "style": {
-            "borderLeft": "1px solid var(--border)"
-        }
-    }
-}

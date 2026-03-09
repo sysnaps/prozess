@@ -1,7 +1,0 @@
-{
-    "cap": "elob",
-    "kind": "contracts",
-    "iddress": "fabs.contracts",
-    "label": "contracts",
-    "default": "fabs.contracts.@verfassung"
-}

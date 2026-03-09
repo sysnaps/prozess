@@ -1,7 +1,0 @@
-{
-    "cap": "elob",
-    "kind": "grain",
-    "iddress": "ci.grains.radio",
-    "label": "Radio",
-    "default": "ci.grains.radio.@verfassung"
-}

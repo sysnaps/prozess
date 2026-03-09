@@ -1,7 +1,0 @@
-{
-    "cap": "elob",
-    "kind": "belt",
-    "iddress": "ci.belts.schreibtisch",
-    "label": "Schreibtisch",
-    "default": "ci.belts.schreibtisch.@verfassung"
-}

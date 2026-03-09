@@ -1,7 +1,0 @@
-{
-    "cap": "elob",
-    "kind": "menu",
-    "iddress": "ci.menus.checkbox",
-    "label": "Checkbox",
-    "default": "ci.menus.checkbox.@verfassung"
-}

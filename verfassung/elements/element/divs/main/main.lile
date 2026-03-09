@@ -1,7 +1,0 @@
-{
-    "cap": "elob",
-    "kind": "div",
-    "iddress": "ci.div.main",
-    "label": "Main",
-    "default": "ci.div.main.@verfassung"
-}

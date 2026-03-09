@@ -1,9 +1,0 @@
-{
-    "body": {
-        "style": {
-            "flex": 1,
-            "overflowY": "auto",
-            "overflowX": "hidden"
-        }
-    }
-}

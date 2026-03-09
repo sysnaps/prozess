@@ -1,7 +1,0 @@
-{
-    "cap": "elob",
-    "kind": "stall",
-    "iddress": "ci.stall.stall",
-    "label": "Stall",
-    "default": "ci.stall.stall.@verfassung"
-}

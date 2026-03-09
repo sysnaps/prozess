@@ -1,7 +1,0 @@
-{
-    "cap": "elob",
-    "kind": "belt",
-    "iddress": "ci.belts.overview",
-    "label": "Overview",
-    "default": "ci.belts.overview.@verfassung"
-}

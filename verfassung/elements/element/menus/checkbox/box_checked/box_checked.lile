@@ -1,8 +1,0 @@
-{
-    "body": {
-        "style": {
-            "background": "var(--accent, #4a9eff)",
-            "borderColor": "var(--accent, #4a9eff)"
-        }
-    }
-}

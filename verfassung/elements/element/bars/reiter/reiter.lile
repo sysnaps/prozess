@@ -1,7 +1,0 @@
-{
-    "cap": "elob",
-    "kind": "bar",
-    "iddress": "ci.bar.reiter",
-    "label": "ReiterBar",
-    "default": "ci.bar.reiter.@verfassung"
-}

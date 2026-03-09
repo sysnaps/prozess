@@ -1,7 +1,0 @@
-{
-    "cap": "print",
-    "kind": "cards",
-    "iddress": "ci.cards.cards",
-    "label": "Cards",
-    "default": "ci.cards.cards.@verfassung"
-}

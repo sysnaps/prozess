@@ -1,7 +1,0 @@
-{
-    "cap": "elob",
-    "kind": "card",
-    "iddress": "ci.cards.card",
-    "label": "Card",
-    "default": "ci.cards.card.@verfassung"
-}

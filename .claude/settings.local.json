@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(copy \"D:\\\\hyph\\\\.egg\" \"D:\\\\hyph\\\\.egg.backup\")",
+      "Bash(dir:*)",
+      "Bash(node -e:*)"
+    ]
+  }
+}

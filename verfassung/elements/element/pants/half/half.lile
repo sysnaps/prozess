@@ -1,7 +1,0 @@
-{
-    "cap": "elob",
-    "kind": "pants",
-    "iddress": "ci.pants.half.half",
-    "label": "HalfPants",
-    "default": "ci.pants.half.half.@verfassung"
-}

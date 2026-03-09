@@ -1,9 +1,0 @@
-{
-    "body": {
-        "style": {
-            "fontSize": 12,
-            "color": "var(--text-secondary)",
-            "userSelect": "none"
-        }
-    }
-}

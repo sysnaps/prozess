@@ -1,7 +1,0 @@
-{
-    "cap": "elob",
-    "kind": "button",
-    "iddress": "ci.button.action",
-    "label": "ActionButton",
-    "default": "ci.button.action.@verfassung"
-}

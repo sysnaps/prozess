@@ -1,7 +1,0 @@
-{
-    "cap": "print",
-    "kind": "button",
-    "iddress": "ci.button.button",
-    "label": "Button",
-    "default": "ci.button.button.@verfassung"
-}

@@ -1,9 +1,0 @@
-{
-    "body": {
-        "style": {
-            "width": 10,
-            "height": 10,
-            "accentColor": "var(--accent)"
-        }
-    }
-}

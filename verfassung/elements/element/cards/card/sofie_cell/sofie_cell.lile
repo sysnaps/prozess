@@ -1,8 +1,0 @@
-{
-    "body": {
-        "style": {
-            "borderLeft": "1px solid var(--lister-col-border)",
-            "minHeight": 34
-        }
-    }
-}

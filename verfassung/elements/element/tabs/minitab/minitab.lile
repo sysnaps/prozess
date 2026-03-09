@@ -1,7 +1,0 @@
-{
-    "cap": "elob",
-    "kind": "tab",
-    "iddress": "ci.tabs.minitab",
-    "label": "MiniTab",
-    "default": "ci.tabs.minitab.@verfassung"
-}

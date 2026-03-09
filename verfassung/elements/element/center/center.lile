@@ -1,7 +1,0 @@
-{
-    "cap": "elob",
-    "kind": "center",
-    "iddress": "ci.center",
-    "label": "Center",
-    "default": "ci.center.@verfassung"
-}

@@ -1,7 +1,0 @@
-{
-    "cap": "elob",
-    "kind": "grain",
-    "iddress": "ci.grains.counter",
-    "label": "Counter",
-    "default": "ci.grains.counter.@verfassung"
-}

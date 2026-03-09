@@ -1,7 +1,0 @@
-{
-    "cap": "print",
-    "kind": "bar",
-    "iddress": "ci.bar.bar",
-    "label": "Bar",
-    "default": "ci.bar.bar.@verfassung"
-}

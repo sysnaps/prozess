@@ -1,7 +1,0 @@
-{
-    "cap": "print",
-    "kind": "hierarchies",
-    "iddress": "fabs.hierarchies",
-    "label": "hierarchies",
-    "default": "fabs.hierarchies.@verfassung"
-}

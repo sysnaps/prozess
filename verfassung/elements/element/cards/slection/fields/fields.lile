@@ -1,9 +1,0 @@
-{
-    "body": {
-        "style": {
-            "display": "flex",
-            "flexWrap": "wrap",
-            "gap": "6px 16px"
-        }
-    }
-}

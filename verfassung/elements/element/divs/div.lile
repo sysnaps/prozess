@@ -1,7 +1,0 @@
-{
-    "cap": "print",
-    "kind": "div",
-    "iddress": "ci.div.div",
-    "label": "Div",
-    "default": "ci.div.div.@verfassung"
-}

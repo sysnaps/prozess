@@ -1,7 +1,0 @@
-{
-    "cap": "elob",
-    "kind": "sabs",
-    "iddress": "ci.sabs.sabs",
-    "label": "Sabs",
-    "default": "ci.sabs.sabs.@verfassung"
-}

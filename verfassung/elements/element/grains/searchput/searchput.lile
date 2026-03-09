@@ -1,7 +1,0 @@
-{
-    "cap": "elob",
-    "kind": "grain",
-    "iddress": "ci.grains.searchput",
-    "label": "SearchPut",
-    "default": "ci.grains.searchput.@verfassung"
-}

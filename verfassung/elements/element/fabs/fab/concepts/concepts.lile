@@ -1,7 +1,0 @@
-{
-    "cap": "elob",
-    "kind": "concepts",
-    "iddress": "fabs.concepts",
-    "label": "concepts",
-    "default": "fabs.concepts.@verfassung"
-}

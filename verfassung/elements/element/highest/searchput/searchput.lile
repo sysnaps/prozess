@@ -1,7 +1,0 @@
-{
-    "cap": "elob",
-    "kind": "highest.grain",
-    "iddress": "ci.highest.searchput",
-    "label": "HighestSearchPut",
-    "default": "ci.highest.searchput.@verfassung"
-}
