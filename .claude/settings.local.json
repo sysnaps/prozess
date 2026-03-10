@@ -3,7 +3,10 @@
     "allow": [
       "Bash(copy \"D:\\\\hyph\\\\.egg\" \"D:\\\\hyph\\\\.egg.backup\")",
       "Bash(dir:*)",
-      "Bash(node -e:*)"
+      "Bash(node -e:*)",
+      "Bash(python -m json.tool:*)",
+      "Bash(ls:*)",
+      "Bash(cmd /c \"dir D:\\\\hyph /b /s 2>nul\")"
     ]
   }
 }

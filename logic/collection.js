@@ -82,7 +82,7 @@ collection.walk = function (cdnas) {
         if (typeof link !== "string") return link
         let sig = require("./signal")
         let hyph = require("./hyph")
-        let zells = require("./zells")
+        let { zells } = require("./zells")
         let signal = sig.nal(link)
         let segments = signal.irpath.fofu
         if (segments.length === 0) return null
@@ -122,6 +122,10 @@ collection.walk = function (cdnas) {
 collection.attach = function (cdnas) {
     return (dna, index) => {
         if (typeof dna === "string") {
+            if (cdnas.maps === "link") {
+                cdnas[dna] = dna
+                return
+            }
             let loaded = cdnas.walk(dna)
             if (loaded && typeof loaded !== "string") {
                 let key = loaded[cdnas.maps] ?? index
@@ -154,7 +158,7 @@ collection.remove = function (cdnas) {
 // only save the structure, not the attached keys or methods
 collection.toJSON = function (cdnas) {
     return () => {
-        return {
+        let serialized = {
             unit: cdnas.unit,
             collection: cdnas.collection,
             maps: cdnas.maps,
@@ -165,6 +169,8 @@ collection.toJSON = function (cdnas) {
                 })
                 : cdnas.items
         }
+        if (cdnas.refs) serialized.refs = true
+        return serialized
     }
 }
 
@@ -172,11 +178,16 @@ collection.add = function (cdnas) {
     return (item) => {
         let key = typeof item === "string" ? item : item[cdnas.maps]
         let found = cdnas[key]
-        if (!found) {
+        if (found && typeof found !== "string") return
+        // replace stale string in items with real object, or push new
+        let stale = cdnas.items.indexOf(key)
+        if (stale !== -1) {
+            cdnas.items[stale] = item
+        } else {
             cdnas.items.push(item)
-            cdnas.attach(item, cdnas.items.length)
-            if (cdnas.on && cdnas.on.added) cdnas.on.added(item)
         }
+        cdnas[key] = item
+        if (cdnas.on && cdnas.on.added) cdnas.on.added(item)
     }
 }
 

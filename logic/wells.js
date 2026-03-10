@@ -1,7 +1,9 @@
 const walk = require("./walk")
 const hyph = require("./hyph")
 const { collection, collections } = require("./collection")
-const zells = require("./zells")
+const { buffgits } = require("./buffgits")
+const lookups = require("./lookups")
+const { zells } = require("./zells")
 
 const wells = {}
 
@@ -19,6 +21,7 @@ const well = function (wdna) {
     if (!wdna.links) {
         wdna.links = collections.create(wdna.concept + ".links", "link")
     } else if (!wdna.links.add) {
+        wdna.links.refs = true
         collection(wdna.links)
     }
     // hydrate lofu collection if present (mofu endpoints own a lofu cosmos)
@@ -128,18 +131,35 @@ wells.distribute = function (is, minwell, siblings, maxwell) {
         well.thrigit = { fofu: 0, mofu: 0, lofu: 0 }
         well.thrigit[well.tofu] = well.minwell
 
+        let realmnum = wells.realmnum(well)
+        well.buffgit = buffgits.create({
+            sphere: "globe",
+            realmnum,
+            fofu: well.thrigit.fofu,
+            mofu: well.thrigit.mofu,
+            lofu: well.thrigit.lofu
+        })
+
         // save updated well back to chicken
         if (well.chicken) {
             hyph.save(well.chicken, well)
         }
 
         // recurse into children (reserve 1 for this well's minschärfe)
-        let children = well.midwells && well.midwells.items ? well.midwells.items : []
-        if (children.length > 0) {
-            wells.distribute(is, well.minwell + 1, children, well.maxwell)
+        let midwells = well.midwells && well.midwells.items ? well.midwells.items : []
+        if (midwells.length > 0) {
+            wells.distribute(is, well.minwell + 1, midwells, well.maxwell)
         }
     })
     // restschärfe: positions from current to maxwell are unused spillage
+}
+
+// resolve realmnum from the well's globe/sphere property
+wells.realmnum = function (welldata) {
+    let spherename = welldata.sphere || welldata.globe || "default globe"
+    let num = lookups.realmnum(spherename)
+    if (num && !num.sig) return num
+    return 1
 }
 
 module.exports = { well, wells }

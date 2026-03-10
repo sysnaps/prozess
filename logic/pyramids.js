@@ -20,7 +20,7 @@ kinds.forEach(k => { points[k.points] = k.concept })
 // total unschärfe per pascal = sum of all pyramid capacities
 const unscharfe = kinds.reduce((a, k) => a + k.capacity, 0) // 326
 
-const zells = require("./zells")
+const { zells } = require("./zells")
 
 const version = 1
 

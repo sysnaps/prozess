@@ -109,4 +109,73 @@ sig.strand = function (rest, object) {
     }
 }
 
+// build egg walk route from a raw link
+// "~name.nick:seri" → ["~", "default", "name", "nick", ":", "seri"]
+// "q.Center°admins@seri--" → ["default", "q", "Center", "°", "admins", "@", "seri--"]
+sig.route = function (link) {
+    let signal = sig.nal(link)
+    let route = []
+
+    // vorzeichen
+    if (signal.is === "strand") route.push("~")
+    else if (signal.is === "command") route.push("!")
+
+    // realm (from +realm or default)
+    let realm = signal.irpath.globe || "default"
+    route.push(realm)
+
+    // fofu concepts
+    signal.irpath.fofu.forEach(function (concept) {
+        route.push(concept)
+    })
+
+    // mofu with separator
+    if (signal.irpath.mofu.length > 0) {
+        let separator = signal.is === "strand" ? ":" : "°"
+        route.push(separator)
+        signal.irpath.mofu.forEach(function (concept) {
+            route.push(concept)
+        })
+    }
+
+    // lofu with separator
+    if (signal.irpath.lofu.length > 0) {
+        if (signal.is !== "strand" || signal.irpath.mofu.length === 0) {
+            route.push("@")
+        }
+        signal.irpath.lofu.forEach(function (value) {
+            route.push(value)
+        })
+    }
+
+    return route
+}
+
+// build chicken filepath for the endpoint chick of a link
+// "~name.nick:seri" → "~name/.1.nick" (strips mofu, builds fofu path with realmnum)
+sig.chicken = function (link, realmnum) {
+    let signal = sig.nal(link)
+    let fofu = signal.irpath.fofu
+    if (fofu.length === 0) return null
+    let num = realmnum || 1
+    let prefix = signal.is === "strand" ? "~" : signal.is === "command" ? "!" : ""
+    let chickenpath = prefix
+    for (let i = 0; i < fofu.length - 1; i++) {
+        chickenpath += fofu[i] + "/"
+    }
+    chickenpath += "." + num + "." + fofu[fofu.length - 1]
+    return chickenpath
+}
+
+// wrap sig.route() output with walked/payload for the route walker
+sig.walk = function (link) {
+    let irpath = sig.route(link)
+    return {
+        link,
+        walked: [],
+        irpath,
+        payload: []
+    }
+}
+
 module.exports = sig

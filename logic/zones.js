@@ -3,10 +3,12 @@
 // zones live inside rings and get placed with proximity spacing
 
 const { collection, collections } = require("./collection")
+const { cap: capfactory, caps } = require("./caps")
 const { pascals } = require("./pascals")
-const { unscharfe } = require("./pyramids")
+const { pyramids, unscharfe } = require("./pyramids")
+const { buffgits } = require("./buffgits")
 const hyph = require("./hyph")
-const zells = require("./zells")
+const { zells } = require("./zells")
 
 const version = 1
 
@@ -21,8 +23,18 @@ function zone(zdna) {
     zdna.unit = "zone"
     zdna.unschärfe = zoneunscharfe
     zells.init(zdna)
+    zdna.super = zones.super(zdna)
+    if (!zdna.links) {
+        zdna.links = collection({
+            unit: "collection",
+            collection: zdna.concept + ".links",
+            maps: "link",
+            refs: true,
+            items: []
+        })
+    }
 
-    // record a strand into the matching pascals' pyramids
+    // record a strand into the turbo pascal's pyramid layers
     // returns map of concept → assigned point
     zdna.record = zones.record(zdna)
 
@@ -50,6 +62,12 @@ zones.add = function (dna) {
     }
 }
 
+zones.super = function (dna) {
+    return function (pascal) { // not sure what we specifically do here but in general we communicate with zones from different rings
+
+    }
+}
+
 zones.saturated = function (dna) {
     return function () {
         return dna.pascals.items.length >= count
@@ -74,14 +92,29 @@ zones.rename = function (dna) {
 
 zones.record = function (dna) {
     return (strand, concepts) => {
-        // how many of this strand's concepts are pascals in this zone?
-        let matching = concepts.filter(c => dna.pascals[c] && typeof dna.pascals[c] !== "string").length
-        let assigned = {}
+        let turbo = dna.pascals[concepts[0]]
+        if (!turbo || typeof turbo === "string") return {}
 
-        for (let concept of concepts) {
-            let p = dna.pascals[concept]
-            if (!p || typeof p === "string") continue
-            assigned[concept] = p.record(strand, matching)
+        // assign points from turbo pascal's layers at each depth
+        let assigned = {}
+        for (let i = 0; i < concepts.length; i++) {
+            let layername = pyramids.which(i + 1)
+            if (layername && turbo.triangle.layers[layername]) {
+                let point = turbo.triangle.layers[layername].assign(strand)
+                if (point !== null) assigned[concepts[i]] = point
+            }
+        }
+        turbo.strands++
+
+        // track in non-turbo pascals for rename/namensgeber
+        for (let i = 1; i < concepts.length; i++) {
+            let p = dna.pascals[concepts[i]]
+            if (p && typeof p !== "string") p.strands++
+        }
+
+        // record link reference
+        if (dna.links && !dna.links[strand]) {
+            dna.links.add(strand)
         }
 
         return assigned
@@ -89,25 +122,62 @@ zones.record = function (dna) {
 }
 
 
-// add a cap to this zone's cosmos
+// add a cap to this zone's cosmos and redistribute
 zones.cap = function (dna) {
-    return (concept) => {
-        if (!dna.cosmos[concept]) {
-            dna.cosmos.add({ concept, strands: 0 })
+    return (capname, strandlink) => {
+        if (!dna.cosmos[capname]) {
+            let newcap = caps.create({
+                concept: capname,
+                strandlink,
+                ring: dna.ring || "default"
+            })
+            dna.cosmos.add(newcap)
+            zones.distributeCosmos(dna.cosmos)
+        } else {
+            let existing = dna.cosmos[capname]
+            if (existing && typeof existing !== "string") {
+                existing.strands.add(strandlink)
+            }
         }
-        return dna.cosmos[concept]
+        return dna.cosmos[capname]
     }
 }
 
+// distribute 900000 unschärfe among cosmos members (same as irlinks wells)
+zones.distributeCosmos = function (cosmos) {
+    let total = 900000
+    let count = 0
+    cosmos.each(function (cap) { if (typeof cap !== "string") count++ })
+    if (count === 0) return
+    let share = Math.floor(total / count)
+    let current = 0
+    cosmos.each(function (cap) {
+        if (typeof cap === "string") return
+        cap.minwell = current
+        cap.maxwell = current + share - 1
+        cap.unschärfe = share
+        current = cap.maxwell + 1
+    })
+}
+
 // create a zone at a given minschärfe
-zones.create = function ({ concepts, minschärfe }) {
+zones.create = function ({ concepts, minschärfe, realmnum }) {
     let maxschärfe = minschärfe + zoneunscharfe - 1
 
     let zdna = zone({
+        "zell": "zell",
         concept: concepts[0], // namensgeber
         version,
+        realm: "default",
         minschärfe,
         maxschärfe,
+        buffgit: buffgits.create({
+            sphere: "ring",
+            realmnum: realmnum || 1,
+            fofu: minschärfe,
+            mofu: 900001,
+            lofu: 900001
+        }),
         counter: { recalculation: [] }
     })
 
@@ -124,7 +194,8 @@ zones.create = function ({ concepts, minschärfe }) {
     zdna.cosmos = collection({
         unit: "collection",
         collection: zdna.concept + ".cosmos",
-        maps: "concept",
+        maps: "cap",
+        refs: true,
         items: []
     })
 

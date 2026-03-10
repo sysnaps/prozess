@@ -4,7 +4,7 @@
 
 const { triangles } = require("./triangles")
 const { unscharfe } = require("./pyramids")
-const zells = require("./zells")
+const { zells } = require("./zells")
 
 const version = 1
 

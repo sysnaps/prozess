@@ -50,7 +50,55 @@ eggs.init = function () {
     const lookups = require("./lookups")
     lookups.init()
 
+    // egg roots — conop entry points for the route walker
+    eggs.roots(egg)
+
     console.log("egg: loaded", egg.items.length, "wells")
+}
+
+// create conop root structures for the route walker
+// egg["~"].default = default ring realm (strands)
+// egg[":"] = cosmos root (zones' mofu spaces)
+// egg["°"] = groups root (irlinks mofu)
+// egg["@"] = lofu root (irlinks entities)
+// egg.default = default globe realm (irlinks)
+eggs.roots = function (e) {
+    eggs.roots.strands(e)
+    eggs.roots.irlinks(e)
+    eggs.roots.cosmos(e)
+    eggs.roots.groups(e)
+    eggs.roots.lofu(e)
+}
+
+eggs.roots.strands = function (e) {
+    if (!e["~"]) e["~"] = {}
+    let ring = e["default ring"]
+    if (!e["~"].default) e["~"].default = {}
+    e["~"].default.zell = "realm"
+    if (ring) e["~"].default.ring = ring
+    let { zells } = require("./zells")
+    zells.init(e["~"].default)
+}
+
+eggs.roots.irlinks = function (e) {
+    let globe = e["default globe"]
+    if (!e.default) e.default = {}
+    if (globe) e.default.globe = globe
+}
+
+eggs.roots.cosmos = function (e) {
+    if (!e[":"]) e[":"] = {}
+    e[":"].zell = "cosmos"
+    let { zells } = require("./zells")
+    zells.init(e[":"])
+}
+
+eggs.roots.groups = function (e) {
+    if (!e["°"]) e["°"] = {}
+}
+
+eggs.roots.lofu = function (e) {
+    if (!e["@"]) e["@"] = {}
 }
 
 module.exports = { eggs, egg }

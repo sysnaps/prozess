@@ -11,6 +11,7 @@
 
 const { collection } = require("./collection")
 const { zones, zoneunscharfe } = require("./zones")
+const { pascals } = require("./pascals")
 
 const total = 900000
 const slots = Math.floor(total / zoneunscharfe) // 459
@@ -76,7 +77,12 @@ rings.assign = function (ring, concepts) {
         if (!found.saturated()) {
             for (let concept of concepts) {
                 if (!found.pascals[concept] && !found.saturated()) {
-                    found.add(concept)
+                    let p = pascals.create({
+                        concept,
+                        index: found.pascals.items.length,
+                        zoneminschärfe: found.minschärfe
+                    })
+                    found.add(p)
                 }
             }
         } else {

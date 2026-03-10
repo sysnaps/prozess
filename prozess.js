@@ -6,8 +6,8 @@
 
 var werift = require('werift')
 var WebSocket = require('ws')
-var incoming = require('./seri/incoming')
-const { eggs } = require('./seri/egg')
+var incoming = require('./logic/incoming')
+const { eggs } = require('./logic/egg')
 
 // ─── CONFIG ───
 var BRAIN_ID = process.argv.includes('--brain-id')
@@ -209,6 +209,7 @@ function handleDataMessage(clientId, raw) {
         response.data = handleMessage(parsed.type, parsed.data || {})
         if (!response.data) response.error = 'unknown type: ' + parsed.type
     } catch (e) {
+        console.error('prozess: error handling', parsed.type, '—', e.message, e.stack)
         response.error = e.message
     }
 
@@ -223,6 +224,7 @@ function handleRelayMessage(clientId, payload) {
         response.data = handleMessage(payload.type, payload.data || {})
         if (!response.data) response.error = 'unknown type: ' + payload.type
     } catch (e) {
+        console.error('prozess: error handling relay', payload.type, '—', e.message, e.stack)
         response.error = e.message
     }
 

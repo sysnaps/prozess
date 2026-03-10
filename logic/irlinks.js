@@ -22,9 +22,9 @@ irlinks.walk.globe = function (signal, globename) {
 
 // walk mofu concepts through the groups well tree
 irlinks.walk.groups = function (signal, globename) {
-    let groupswell = egg[globename + " groups"] || egg["default globe groups"]
-    if (!groupswell) return null
-    let walked = groupswell.walk(signal)
+    groups.well = egg[globename + " groups"] || egg["default globe groups"]
+    if (!groups.well) return null
+    let walked = groups.well.walk(signal)
     console.log("irlink walkgroups:", walked.status, walked.well ? walked.well.concept : "")
     return walked.well
 }
@@ -33,18 +33,19 @@ irlinks.lofu = {}
 // handle lofu entity through groups
 irlinks.lofu.handle = function (signal, mofuwell) {
     if (!mofuwell) return null
-    let lofuwell = groups.lofu.handle(signal, mofuwell)
-    console.log("irlink lofu:", lofuwell ? lofuwell.concept : "")
-    return lofuwell
+    let well = {}
+    well.lofu = groups.lofu.handle(signal, mofuwell)
+    console.log("irlink lofu:", well.lofu ? well.lofu.concept : "")
+    return well.lofu
 }
 
 // check cache or create a new viewpoint for the resolved irlink
 irlinks.viewpoint = function (signal, fofuwell, mofuwell, lofuwell) {
-    let spherenum = lookups.spherenum(fofuwell.sphere)
-    if (spherenum.sig) return spherenum
-    let cached = lookups.get(fofuwell.sphere, spherenum, fofuwell.thrigit.fofu, mofuwell.thrigit.mofu, lofuwell.thrigit.lofu)
+    let realmnum = lookups.realmnum(fofuwell.sphere)
+    if (realmnum.sig) return realmnum
+    let cached = lookups.get(fofuwell.sphere, realmnum, fofuwell.thrigit.fofu, mofuwell.thrigit.mofu, lofuwell.thrigit.lofu)
     if (cached.sig) {
-        return viewpoints.create(signal, fofuwell, mofuwell, lofuwell, spherenum)
+        return viewpoints.create(signal, fofuwell, mofuwell, lofuwell, realmnum)
     }
     return cached
 }

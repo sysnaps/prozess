@@ -2,7 +2,7 @@
 // it holds the strands that reference this pascal's concept
 
 const { pyramids } = require("./pyramids")
-const zells = require("./zells")
+const { zells } = require("./zells")
 
 const version = 1
 
