@@ -23,28 +23,9 @@ D:\prozess\logic\IF.js
 
 I wont rigorously enforce this. It would be nice though if you use the IF().then() syntax and have the "thens" be their own functions. 
 
+## Methods > Static functions
 
-and if you are motivated you can even give the if conditions a name. ok that is actually easy enough. 
-hook them onto the dna or egg like 
-instead of 
-```js
-let midwells = well.midwells && well.midwells.items ? well.midwells.items : []
-        if (midwells.length > 0) {...}
-```
-so
-well.midwells.amount.greater["0"] = midwells.length > 0
-if (midwells.length > 0)
-
-or how about:
-runes.ifs.amount.greater["0"] = function(amount) {return amount > 0}
-
-if(runes.ifs.amount.greater["0"](midwells.length))
-
-which seems tedious. this is why I wont strictly enforce this.
-But have in the back of your mind that once the App runs the goal is that we can create stammzells . 
-we cant create viewpoints.js or triangles.js or rings.js and put it inside app\src at runtime. 
-but we can create good syntax and generic ifs and thens and encode that into json and our
-zells.js can turn generic stammzellen dna into zells similar to the ones we describe with ours files
-by picking and choosing our methods and mdnas. then during the creation we attach those methods (runes) to the dna ,
-feed it the argument the callback needs (or the whole dna) and then during the .get walks we can have a 
-runebook.each run calling the runes creating very zell specific behavior
+The Plural factories are there to attach methods to zells.
+When implementing the Pipelines it is necessary that you use the methods provided by the zells and not static functions . the Factories should be there to take the dna of a zell 
+and then return a function that we attach to that zell inside its direct call (like zone() or pascal()) as a method - by calling that function and passing the dna to it.  
+and the function that gets returned takes more function specific parameter and handles the specific tasks needed for the pipeline to work whenever we need a zell of its kind . 

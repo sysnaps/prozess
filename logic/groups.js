@@ -27,35 +27,40 @@ groups.lofu.create = function (gdna) {
     }
 }
 
-groups.lofu.handle = function (signal, mofuwell) {
+// concept param: explicit concept name, or falls back to signal.irpath.lofu[0]
+groups.lofu.handle = function (signal, mofuwell, concept) {
     if (!mofuwell.lofu) {
         mofuwell.lofu = collection({
             unit: "collection",
-            collection: mofuwell.concept + ".lofu",
+            collection: (mofuwell.concept || "mofu") + ".lofu",
             maps: "concept",
             items: []
         })
     }
 
-    let concept = signal.irpath.lofu[0]
+    let name = concept || (signal.irpath && signal.irpath.lofu ? signal.irpath.lofu[0] : null)
+    if (!name) return null
 
     // already exists?
-    let existing = mofuwell.lofu[concept]
+    let existing = mofuwell.lofu[name]
     if (existing && typeof existing !== "string") {
         return existing
     }
 
     // create lofu well
-    let lofuwell = wells.first(signal.is, concept, null, null,
-        collections.create(concept + ".midwells", "concept"), "lofu")
-    lofuwell.globe = mofuwell.globe || "default"
-    lofuwell.well = mofuwell.well || "irlinks"
-    lofuwell.sphere = mofuwell.sphere || "default globe"
+    let lofuwell = wells.create({
+        is: signal.is || "irlink",
+        concept: name,
+        tofu: "lofu",
+        sphere: mofuwell.sphere || "default globe",
+        globe: mofuwell.globe || "default"
+    })
+    lofuwell.well = "lofu"
 
     mofuwell.lofu.add(lofuwell)
 
     // distribute lofu cosmos among members
-    wells.distribute(signal.is, 1, mofuwell.lofu.items, 900000)
+    wells.distribute(signal.is || "irlink", 1, mofuwell.lofu.items, 900000)
 
     // save mofu well with updated lofu
     if (mofuwell.chicken) {

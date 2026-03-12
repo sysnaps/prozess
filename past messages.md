@@ -1,9 +1,9 @@
 1:
 
-incoming link is -  entities.user@seri--
-incoming link is -  !this.is.a(command)
-incoming link is -  ~this.is:a.nype.9
-incoming link is - preplanner.plans°jobs.tippster+eastwesteros@seri--
+entrance link is -  entities.user@seri--
+entrance link is -  !this.is.a(command)
+entrance link is -  ~this.is:a.nype.9
+entrance link is - preplanner.plans°jobs.tippster+eastwesteros@seri--
 
 when we have an irlink or a command
 the lofu always is the @ 
@@ -59,7 +59,7 @@ k i first need to load the eggistry from the hyph
 
 (funny name, right? 🥚📃)
 
-but I do not want to do that with every incoming call 
+but I do not want to do that with every entrance call 
 can we load it into the cache when we start the local brain ?
 
 4:
@@ -68,12 +68,12 @@ uhm why isnt it logging false anymore ?
 prozess: running. press Ctrl+C to stop.
 prozess: connected to signaling server
 prozess: registered as default-brain
-incoming link is -  entities.user@seri--
-incoming link is -  !this.is.a(command)
+entrance link is -  entities.user@seri--
+entrance link is -  !this.is.a(command)
 does it exist? -  null
-incoming link is -  ~this.is:a.nype.9
+entrance link is -  ~this.is:a.nype.9
 does it exist? -  null
-incoming link is -  preplanner.plans°jobs.tippster+eastwesteros@seri--
+entrance link is -  preplanner.plans°jobs.tippster+eastwesteros@seri--
 prozess: sent answer to client 15
 prozess: data channel opened with client 15
 
@@ -112,11 +112,11 @@ uhm:
 
 does it exist? -  {"status":"error","peerent":null,"missing":"entities","depth":0}
 irpath is -  [ 'entities', 'user' ]
-incoming link is -  !this.is.a(command)
+entrance link is -  !this.is.a(command)
 does it exist? -  null
-incoming link is -  ~this.is:a.nype.9
+entrance link is -  ~this.is:a.nype.9
 does it exist? -  null
-incoming link is -  preplanner.plans°jobs.tippster+eastwesteros@seri--
+entrance link is -  preplanner.plans°jobs.tippster+eastwesteros@seri--
 existence.check - .preplanner not found at D:\hyph\egg
 does it exist? -  {"status":"error","peerent":null,"missing":"preplanner","depth":0}
 irpath is -  [ 'preplanner', 'plans' ]

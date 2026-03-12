@@ -22,6 +22,7 @@ const rings = {}
 
 // factory: hydrate a ring with methods
 function ring(rdna) {
+    rdna.zell = rdna.zell || "ring"
     rdna.unit = "ring"
     rdna.slots = slots
     rdna.ringend = ringend
@@ -37,11 +38,14 @@ function ring(rdna) {
 }
 
 rings.create = function ({ concept }) {
-    let rdna = ring({
+    let rdna = {
+        zell: "ring",
         concept: concept || "default ring",
         total,
         counter: { recalculation: [] }
-    })
+    }
+    let { zells } = require("./zells")
+    zells.init(rdna)
 
     rdna.zones = collection({
         unit: "collection",

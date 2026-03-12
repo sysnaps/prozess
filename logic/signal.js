@@ -48,10 +48,10 @@ sig.nal = function (link) {
 
 // irlink: fofu.mofu°groups@lofu
 sig.irlink = function (rest, object) {
-    // lofu is @... at the end
+    // lofu is @... at the end — strip the @ prefix
     if (rest.includes("@")) {
         let atIdx = rest.indexOf("@")
-        object.irpath.lofu = [rest.slice(atIdx)]
+        object.irpath.lofu = [rest.slice(atIdx + 1)]
         rest = rest.slice(0, atIdx)
     }
     // ° splits fofu from mofu
@@ -110,8 +110,8 @@ sig.strand = function (rest, object) {
 }
 
 // build egg walk route from a raw link
-// "~name.nick:seri" → ["~", "default", "name", "nick", ":", "seri"]
-// "q.Center°admins@seri--" → ["default", "q", "Center", "°", "admins", "@", "seri--"]
+// "~llms.claude:seri" → ["~", "llms", "default", "claude", ":", "seri"]
+// "q.Center°admins@seri--" → ["☷", "q", "default", "Center", "°", "admins", "@", "seri--"]
 sig.route = function (link) {
     let signal = sig.nal(link)
     let route = []
@@ -119,15 +119,12 @@ sig.route = function (link) {
     // vorzeichen
     if (signal.is === "strand") route.push("~")
     else if (signal.is === "command") route.push("!")
+    else if (signal.is === "irlink") route.push("☷")
 
-    // realm (from +realm or default)
     let realm = signal.irpath.globe || "default"
-    route.push(realm)
 
-    // fofu concepts
-    signal.irpath.fofu.forEach(function (concept) {
-        route.push(concept)
-    })
+    // zone/continent concept first, then realm, then rest
+    sig.route.fofu(route, signal.irpath.fofu, realm)
 
     // mofu with separator
     if (signal.irpath.mofu.length > 0) {
@@ -149,6 +146,15 @@ sig.route = function (link) {
     }
 
     return route
+}
+
+// push fofu: first concept (turbo/continent), then realm, then remaining
+sig.route.fofu = function (route, fofu, realm) {
+    if (fofu.length > 0) route.push(fofu[0])
+    route.push(realm)
+    for (let i = 1; i < fofu.length; i++) {
+        route.push(fofu[i])
+    }
 }
 
 // build chicken filepath for the endpoint chick of a link

@@ -6,7 +6,7 @@
 
 var werift = require('werift')
 var WebSocket = require('ws')
-var incoming = require('./logic/incoming')
+var entrance = require('./logic/entrance')
 const { eggs } = require('./logic/egg')
 
 // ─── CONFIG ───
@@ -183,8 +183,8 @@ function cleanupPeer(clientId) {
 // ─── MESSAGE HANDLER (shared by WebRTC and relay) ───
 function handleMessage(type, data) {
     switch (type) {
-        case 'seri.incoming':
-            incoming(data)
+        case 'seri.entrance':
+            entrance(data)
             return { received: true }
         case 'ping':
             return { pong: true }

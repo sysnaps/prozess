@@ -25,12 +25,12 @@ all three bugs are the same class: **implicit load-order dependencies**. the old
 
 ### route.js as thin loop, not fat dispatcher
 
-the plan said "no separate route.js" in the earlier doc, suggesting the loop lives in incoming.js. i made route.js anyway because:
-- incoming.js currently does type detection AND dispatch. mixing the walk loop into it would make incoming.js do three things.
+the plan said "no separate route.js" in the earlier doc, suggesting the loop lives in entrance.js. i made route.js anyway because:
+- entrance.js currently does type detection AND dispatch. mixing the walk loop into it would make entrance.js do three things.
 - route.js is 80 lines. it has one job: pop from irpath, detect step type, delegate.
 - Phase 2 will add sphere-specific .get behaviors. those live in the zell factories (zones.js, wells.js), not in route.js. the walker stays thin.
 
-the loop can easily be inlined into incoming.js later if that's preferred.
+the loop can easily be inlined into entrance.js later if that's preferred.
 
 ### peek-based exe detection
 
@@ -63,7 +63,7 @@ each is its own named function on the zells.get namespace. Phase 2 will override
 right now `zells.get.create` just calls `zells.create(concept)` — a bare zell with counters and runebook. Phase 2 needs sphere-specific creation:
 
 - **strand .get**: first concept → zone finding via `rings.assign()`, gap swapping, pascal creation. subsequent concepts → `strands.chick()` logic (triangle point assignment, pyramid layers).
-- **irlink .get**: well creation via `wells.first()`, distribute unschärfe via `wells.distribute()`.
+- **irlink .get**: well creation via `wells.create()`, distribute unschärfe via `wells.distribute()`.
 
 the sphere can be detected from the egg root we're walking through. `egg["~"].default` knows it's a ring (`.ring` property wired in eggs.roots). `egg.default` knows it's a globe (`.globe` property).
 

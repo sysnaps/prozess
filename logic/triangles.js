@@ -10,12 +10,12 @@ const triangles = {}
 
 // factory: hydrate a triangle with methods
 function triangle(tdna) {
+    tdna.zell = tdna.zell || "triangle"
     tdna.unit = "triangle"
-    zells.init(tdna)
 
     tdna.record = triangles.record(tdna)
 
-    tdna.check.version(version)
+    if (tdna.check) tdna.check.version(version)
 
     return tdna
 }
@@ -31,11 +31,14 @@ triangles.record = function (dna) {
 triangles.create = function (concept, offset) {
     let layers = pyramids.create(concept, offset)
 
-    return triangle({
+    let tdna = {
+        zell: "triangle",
         concept,
         version,
         layers
-    })
+    }
+    zells.init(tdna)
+    return tdna
 }
 
 module.exports = { triangle, triangles }

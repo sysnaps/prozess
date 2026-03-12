@@ -30,12 +30,13 @@ const pyramids = {}
 function pyramid(pdna) {
     pdna.unit = "pyramid"
     pdna.kind = pdna.kind || pdna.concept
+    pdna.zell = "pyramid"
+    pdna.pyramid = pdna.kind
     pdna.used = pdna.used || 0
-    zells.init(pdna)
 
     pdna.assign = pyramids.slot(pdna)
 
-    pdna.check.version(version)
+    if (pdna.check) pdna.check.version(version)
 
     return pdna
 }
@@ -60,7 +61,8 @@ pyramids.create = function (concept, offset) {
         let minschärfe = current
         let maxschärfe = current + kind.capacity - 1
 
-        layers[kind.concept] = pyramid({
+        let pdna = {
+            zell: "pyramid",
             concept: concept + "." + kind.concept,
             version,
             kind: kind.concept,
@@ -69,7 +71,9 @@ pyramids.create = function (concept, offset) {
             minschärfe,
             maxschärfe,
             strands: []
-        })
+        }
+        zells.init(pdna)
+        layers[kind.concept] = pdna
 
         current = maxschärfe + 1
     }

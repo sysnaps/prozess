@@ -1,8 +1,8 @@
 const fs = require("fs")
 const path = require("path")
 
-const HYPH_ROOT = "D:\\hyph"
-const CHICKEN = path.join(HYPH_ROOT, "chicken")
+const ROOT = "D:\\hyph"
+const CHICKEN = path.join(ROOT, "chicken")
 
 const hyph = {}
 
@@ -11,7 +11,7 @@ const hyph = {}
 // ":" becomes "᛬" (runic colon) in filenames
 hyph.resolve = function (link) {
     if (link.startsWith("%"))
-        return path.join(HYPH_ROOT, link.slice(1))
+        return path.join(ROOT, link.slice(1))
     let mapped = link.replace(/:/g, "᛬")
     return path.join(CHICKEN, mapped)
 }
@@ -32,14 +32,37 @@ hyph.update = function (link, keypath, value) {
     fs.writeFileSync(filePath, JSON.stringify(data, null, 4), "utf-8")
 }
 
+const chicken = {}
+
+chicken.get = function (track, signal, base) {
+    // what you need is to know what numbers your realms are!
+    // let's say we have [ '☷', 'q', '#', 'a new realm' ] 
+
+    // now your signal needs to turn into a chickenpath. a filepath.
+    // we do that with comparing the current track to the buffgit
+    const buffgit = signal.buffgit
+    console.log('track - ', track, ' | buffgit - ', buffgit)
+
+    if (track.length == 1) {
+        const chickenpath = path.join(CHICKEN, "." + track[0])
+        // D:\hyph\chicken\.☷
+        // now let's get it from the hyph
+        return { chick: fs.readFileSync(chickenpath, "utf-8"), chickenpath }
+    }
+}
+
 // read a pee file from the chicken
-hyph.get = function (link) {
+hyph.get = function (link, base) {
+    "hey there. let's just have a chicken.get"
+    if (typeof link == "object" || Array.isArray(link)) return chicken.get(base, link)
     let filepath = hyph.resolve(link)
     if (!fs.existsSync(filepath)) return null
     let raw = fs.readFileSync(filepath, "utf-8")
     if (!raw || !raw.trim()) return null
     return JSON.parse(raw)
 }
+
+
 
 // write a pee file to the chicken
 hyph.save = function (link, data) {
@@ -55,4 +78,4 @@ hyph.mkdir = function (link) {
     if (!fs.existsSync(dirpath)) fs.mkdirSync(dirpath, { recursive: true })
 }
 
-module.exports = hyph
+module.exports = { hyph, chicken }

@@ -152,7 +152,7 @@ seri:(what do you mean with with just run inline? yeah i guess i forgot to make 
 
 ### all require chains load clean
 
-`incoming → irlinks → ok`, `incoming → strands → ok`, individual modules ok.
+`entrance → irlinks → ok`, `entrance → strands → ok`, individual modules ok.
 
 ### known issues / open questions
 
@@ -244,7 +244,7 @@ update the egg.zones.{realm} reference.
 
 ---
 
-seri:(did you think about using .get and .exe for the incoming strands in incoming.js as well?)
+seri:(did you think about using .get and .exe for the entrance strands in entrance.js as well?)
 
 ## questions / potential issues
 

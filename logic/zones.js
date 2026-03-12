@@ -20,9 +20,9 @@ const zones = {}
 
 // factory: hydrate a zone with methods
 function zone(zdna) {
+    zdna.zell = zdna.zell || "zone"
     zdna.unit = "zone"
     zdna.unschärfe = zoneunscharfe
-    zells.init(zdna)
     zdna.super = zones.super(zdna)
     if (!zdna.links) {
         zdna.links = collection({
@@ -50,7 +50,7 @@ function zone(zdna) {
     zdna.cap = zones.cap(zdna)
 
     // version check
-    zdna.check.version(version)
+    if (zdna.check) zdna.check.version(version)
 
     return zdna
 }
@@ -63,8 +63,10 @@ zones.add = function (dna) {
 }
 
 zones.super = function (dna) {
-    return function (pascal) { // not sure what we specifically do here but in general we communicate with zones from different rings
-
+    let { supers } = require("./supers")
+    let sdna = supers.create({ concept: dna.concept, is: "zone" })
+    return function (realmname) {
+        return sdna.find(realmname)
     }
 }
 
@@ -164,9 +166,9 @@ zones.distributeCosmos = function (cosmos) {
 zones.create = function ({ concepts, minschärfe, realmnum }) {
     let maxschärfe = minschärfe + zoneunscharfe - 1
 
-    let zdna = zone({
-        "zell": "zell",
-        concept: concepts[0], // namensgeber
+    let zdna = {
+        "zell": "zone",
+        concept: concepts[0],
         version,
         realm: "default",
         minschärfe,
@@ -179,7 +181,8 @@ zones.create = function ({ concepts, minschärfe, realmnum }) {
             lofu: 900001
         }),
         counter: { recalculation: [] }
-    })
+    }
+    zells.init(zdna)
 
     // pascals collection
     zdna.pascals = collection({
@@ -236,4 +239,199 @@ zones.shared = function (zone, concepts) {
     return matched
 }
 
-module.exports = { zone, zones, zoneunscharfe, count }
+// --- realm factory ---
+// realm = strand root (egg["~"].default). handles turbo detection and pascal chick creation
+function realm(rdna) {
+    rdna.zell = rdna.zell || "realm"
+    rdna.work = zones.work(rdna)
+    return rdna
+}
+
+// --- realm work: manufactured by zones, attached to realm ---
+// route walker calls realm.get(concept, signal) → hub → dna.work(concept, signal)
+zones.work = function (dna) {
+    return function (concept, signal) {
+        zones.work.hydrate(dna, signal)
+        if (!signal.zone) return zones.work.turbo(dna, concept, signal)
+        return zones.work.chick(dna, concept, signal)
+    }
+}
+
+// lazy-hydrate the ring on first access
+zones.work.hydrate = function (dna, signal) {
+    if (signal.ring) return
+    let ringwell = dna.ring
+    if (!ringwell) return
+    if (!ringwell.zones) {
+        ringwell.zell = ringwell.zell || "ring"
+        zells.init(ringwell)
+        ringwell.zones = collection({
+            unit: "collection",
+            collection: (ringwell.concept || "default") + ".zones",
+            maps: "concept",
+            items: []
+        })
+        ringwell.occupied = {}
+        let { gaps } = require("./gaps")
+        gaps.populate(ringwell)
+    }
+    signal.ring = ringwell
+    signal.realmnum = zones.realmnum(signal)
+}
+
+zones.realmnum = function (signal) {
+    let lookups = require("./lookups")
+    let realmname = signal.realm || "default"
+    let num = lookups.realmnum(realmname + " ring")
+    if (num && !num.sig) return num
+    return 1
+}
+
+// first concept = turbo → zone finding, gap swapping, pascal creation
+zones.work.turbo = function (dna, concept, signal) {
+    let { rings } = require("./rings")
+    let fofu = zones.fofu(signal, concept)
+    let z = rings.assign(signal.ring, fofu)
+    signal.zone = z
+
+    let assigned = z.record(signal.link, fofu)
+    z.rename()
+    signal.assigned = assigned
+
+    let turbo = z.pascals[concept]
+    signal.turbo = turbo
+    signal.chickenpath = "~"
+    signal.impliedstrand = "~"
+    signal.depth = 0
+
+    console.log("work turbo:", concept, "zone:", z.concept, "min:" + z.minschärfe)
+
+    return zones.work.chick(dna, concept, signal)
+}
+
+// collect fofu concepts: current concept + remaining until next conop
+zones.fofu = function (signal, concept) {
+    let conops = require("./conops")
+    let fofu = [concept]
+    for (let i = 0; i < signal.irpath.length; i++) {
+        if (conops.includes(signal.irpath[i])) break
+        fofu.push(signal.irpath[i])
+    }
+    return fofu
+}
+
+// create or update a pascal chick file
+zones.work.chick = function (host, concept, signal) {
+    let z = signal.zone
+    let turbo = signal.turbo
+    let realmnum = signal.realmnum || 1
+    let depth = signal.depth || 0
+    let kind = pyramids.which(depth + 1)
+    let assigned = signal.assigned || {}
+    let point = assigned[concept] !== undefined ? assigned[concept] : null
+
+    signal.impliedstrand += (depth > 0 ? "." : "") + concept
+    let filepath = signal.chickenpath + "." + realmnum + "." + concept
+    let folderpath = signal.chickenpath + concept
+
+    let spore = zones.work.chick.find(host, concept, filepath)
+
+    if (!spore) {
+        spore = zones.work.chick.create(concept, filepath, signal, kind, point, turbo, realmnum, z)
+    } else {
+        zones.work.chick.update(spore, filepath, kind, point, turbo, realmnum, z)
+    }
+
+    spore.zell = "pascal"
+    host[concept] = spore
+    zells.init(spore)
+    spore.stamp(filepath)
+
+    zones.work.chick.payload(spore, signal)
+
+    hyph.mkdir(folderpath)
+    signal.chickenpath = folderpath + "/"
+
+    return spore
+}
+
+zones.work.chick.find = function (host, concept, filepath) {
+    if (host[concept] && typeof host[concept] !== "string") return host[concept]
+    let loaded = hyph.get(filepath)
+    if (loaded) return loaded
+    return null
+}
+
+zones.work.chick.create = function (concept, filepath, signal, kind, point, turbo, realmnum, z) {
+    let layer = turbo && turbo.triangle ? turbo.triangle.layers[kind] : null
+    let data = {
+        zell: "pascal",
+        unit: "pascal",
+        concept,
+        strand: signal.impliedstrand,
+        realm: signal.realm || "default",
+        zone: z.concept,
+        pyramid: {
+            concept: kind,
+            capacity: layer ? layer.capacity : null,
+            minschärfe: layer ? layer.minschärfe : null,
+            maxschärfe: layer ? layer.maxschärfe : null
+        },
+        point,
+        buffgit: buffgits.create({
+            sphere: "ring",
+            realmnum,
+            fofu: point,
+            mofu: 900001,
+            lofu: 900001
+        })
+    }
+    hyph.save(filepath, data)
+    console.log("work chick: created", filepath, "point:" + point)
+    return data
+}
+
+zones.work.chick.update = function (existing, filepath, kind, point, turbo, realmnum, z) {
+    let layer = turbo && turbo.triangle ? turbo.triangle.layers[kind] : null
+    let updated = false
+
+    if (!existing.zell) {
+        existing.zell = "pascal"
+        updated = true
+    }
+    if (!existing.point && point) {
+        existing.point = point
+        updated = true
+    }
+    if (!existing.pyramid && layer) {
+        existing.pyramid = {
+            concept: kind,
+            capacity: layer.capacity,
+            minschärfe: layer.minschärfe,
+            maxschärfe: layer.maxschärfe
+        }
+        updated = true
+    }
+    if (!existing.buffgit) {
+        existing.buffgit = buffgits.create({
+            sphere: "ring",
+            realmnum,
+            fofu: existing.point || point,
+            mofu: 900001,
+            lofu: 900001
+        })
+        updated = true
+    }
+    if (updated) {
+        hyph.save(filepath, existing)
+        console.log("work chick: updated", filepath)
+    }
+}
+
+zones.work.chick.payload = function (spore, signal) {
+    if (spore.point !== null && spore.point !== undefined) {
+        signal.payload.push(spore.point)
+    }
+}
+
+module.exports = { zone, zones, realm, zoneunscharfe, count }

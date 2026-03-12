@@ -12,7 +12,7 @@ The decision to make `zells.get` the absolute center of the route-walking univer
 ## 2. Vorzeichen vs. Conop
 
 *   **Insight:** Your definition is precise and elegant: a `conop` (`~`, `:`, `°`, `@`) is the coordinate symbol, but it only becomes the `vorzeichen` when it's the *first* coordinate starting the route or sub-route. 
-*   **Why it's powerful:** Knowing this allows the logic in `route.js` or `incoming.js` to act statelessly. The code already does this implicitly by checking if `signal.vorzeichen` is set. Furthermore, your idea of making `vorzeichen` addressable units via strands is a massive extensibility win. It means we aren't hardcoded to a few symbols; a strand could define a new `vorzeichen`, subsequently opening an entirely new "sphere" logic without changing the core engine.
+*   **Why it's powerful:** Knowing this allows the logic in `route.js` or `entrance.js` to act statelessly. The code already does this implicitly by checking if `signal.vorzeichen` is set. Furthermore, your idea of making `vorzeichen` addressable units via strands is a massive extensibility win. It means we aren't hardcoded to a few symbols; a strand could define a new `vorzeichen`, subsequently opening an entirely new "sphere" logic without changing the core engine.
 
 ## 3. "Cackles" (Caching Paths)
 

@@ -12,12 +12,13 @@ const pascals = {}
 
 // factory: hydrate a pascal with methods
 function pascal(pdna) {
+    pdna.zell = pdna.zell || "pascal"
     pdna.unit = "pascal"
-    zells.init(pdna)
 
     pdna.record = pascals.record(pdna)
+    pdna.work = pascals.work(pdna)
 
-    pdna.check.version(version)
+    if (pdna.check) pdna.check.version(version)
 
     return pdna
 }
@@ -43,7 +44,8 @@ pascals.create = function ({ concept, index, zoneminschärfe }) {
     // create the triangle with pyramid layers starting at our minschärfe
     let tri = triangles.create(concept, minschärfe)
 
-    return pascal({
+    let pdna = {
+        zell: "pascal",
         concept,
         version,
         index,
@@ -53,7 +55,19 @@ pascals.create = function ({ concept, index, zoneminschärfe }) {
         triangle: tri,
         strands: 0,
         counter: { recalculation: [] }
-    })
+    }
+    zells.init(pdna)
+    return pdna
+}
+
+// pascal work: next-depth chick creation
+// when route walker calls pascal.get(concept, signal) → hub → dna.work
+pascals.work = function (dna) {
+    return function (concept, signal) {
+        signal.depth++
+        let { zones } = require("./zones")
+        return zones.work.chick(dna, concept, signal)
+    }
 }
 
 module.exports = { pascal, pascals }

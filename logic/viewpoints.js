@@ -9,11 +9,11 @@ const version = 1
 const viewpoints = {}
 
 function viewpoint(vdna) {
-    zells.init(vdna)
+    vdna.zell = vdna.zell || "viewpoint"
 
     vdna.cache = lookups.cache(vdna)
 
-    vdna.check.version(version)
+    if (vdna.check) vdna.check.version(version)
 
     return vdna
 }
@@ -28,7 +28,7 @@ viewpoints.path = function (signal) {
 }
 
 viewpoints.create = function (signal, fofuwell, mofuwell, lofuwell, realmnum) {
-    let vdna = viewpoint({
+    let vdna = {
         zell: "viewpoint",
         link: signal.link,
         realm: fofuwell.globe || "default",
@@ -42,7 +42,8 @@ viewpoints.create = function (signal, fofuwell, mofuwell, lofuwell, realmnum) {
             mofu: mofuwell.thrigit.mofu,
             lofu: lofuwell.thrigit.lofu
         })
-    })
+    }
+    zells.init(vdna)
 
     let filepath = viewpoints.path(signal)
     hyph.save(filepath, vdna)

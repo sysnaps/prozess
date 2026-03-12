@@ -7,7 +7,7 @@
 | `route.js` | added `signal.vorzeichen`, `signal.realm` tracking. first vs mid-walk conop detection. `route.finish` saves zone/cosmos and handles nype. `route.finish.fofu` extracts fofu from walked path |
 | `streets.js` | NEW — sphere-specific .get/.exe factories. `streets.strand` wires strand realm with turbo/spore/chick logic. `streets.cosmos` wires cosmos root for cap creation |
 | `egg.js` | `eggs.roots.strands` calls `streets.strand()` on realm. `eggs.roots.cosmos` calls `streets.cosmos.wire()` |
-| `incoming.js` | strand dispatch now goes through `sig.walk` + `route()`. irlinks still use old pipeline. `strands.create` no longer called |
+| `entrance.js` | strand dispatch now goes through `sig.walk` + `route()`. irlinks still use old pipeline. `strands.create` no longer called |
 | `strands.js` | deleted `strands.create`, `strands.hydrate`, `strands.zone`, `strands.chick`. kept `strands.realmnum`, `strands.nype`, `strands.save.*` |
 | `zells.js` | renamed child → spore everywhere. counter hydration: re-attach `.increment` on counters loaded from JSON |
 | `counters.js` | added `counters.hydrate(cdna)` — re-runs `counter()` on deserialized counter data |

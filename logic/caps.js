@@ -4,11 +4,11 @@ const { zells } = require("./zells")
 const version = 1
 
 function cap(cdna) {
+    cdna.zell = cdna.zell || "cap"
     cdna.unit = "cap"
-    zells.init(cdna)
 
     cdna.strands.add = caps.strands.add(cdna)
-    cdna.check.version(version)
+    if (cdna.check) cdna.check.version(version)
 
     if (!cdna.buffgits) {
         cdna.buffgits = []
@@ -23,7 +23,8 @@ function cap(cdna) {
 const caps = {}
 
 caps.create = function ({ concept, strandlink, ring }) {
-    return cap({
+    let cdna = {
+        zell: "cap",
         cap: concept,
         version,
         ring,
@@ -32,7 +33,9 @@ caps.create = function ({ concept, strandlink, ring }) {
         minwell: 0,
         maxwell: 0,
         unschärfe: 0
-    })
+    }
+    zells.init(cdna)
+    return cdna
 }
 
 caps.buffgit = {}

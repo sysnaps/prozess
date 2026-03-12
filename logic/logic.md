@@ -6,7 +6,7 @@ prozess receives links from the app, parses them into signals, and processes the
 
 ## signal parsing (signal.js)
 
-every link enters through `incoming.js` and gets parsed by `sig.nal(link)`.
+every link enters through `entrance.js` and gets parsed by `sig.nal(link)`.
 
 the prefix determines the type:
 - no prefix → **irlink** — `q.Center.Middle°admins.irl@seri--`
@@ -46,7 +46,7 @@ after init: `egg["default globe"]` and `egg.globes.default` both point to the sa
 ### how it works
 
 ```
-incoming("q.Center.Middle°admins.irl@seri--")
+entrance("q.Center.Middle°admins.irl@seri--")
   → sig.nal() parses: fofu=["q","Center","Middle"], mofu=["admins","irl"], lofu=["@seri--"]
   → irlinks.create(signal)
     → irlinks.walk.globe(signal, "default globe")
@@ -66,7 +66,7 @@ the walk is the core of irlinks. for each concept in the fofu chain:
 1. **step()** — find or create a well at this concept
    - check if it exists as a midwell of the current well
    - try loading from the chicken (chick file)
-   - if not found: create a brand new well with `wells.first()`
+   - if not found: create a brand new well with `wells.create()`
 2. **mark()** — stamp sphere/type properties on the well
 3. **record()** — add the link string to the well's links collection, save to chicken
 
@@ -106,7 +106,7 @@ when an irlink has all three parts (fofu + mofu + lofu), a viewpoint is created.
 ### how it works
 
 ```
-incoming("~energy.golden.strong.10")
+entrance("~energy.golden.strong.10")
   → sig.nal() parses: fofu=["energy","golden","strong"], lofu=["10"]
   → strands.create(signal)
     → strands.hydrate(ringwell) — lazy-init the ring with zones/slots
@@ -308,7 +308,7 @@ flow control: `IF(condition).then(callback, ...args)` — calls callback with ar
 
 ```
 seri/
-  incoming.js     — entry point: parse link, dispatch to irlinks or strands
+  entrance.js     — entry point: parse link, dispatch to irlinks or strands
   signal.js       — sig.nal(): parse links into { is, irpath: { fofu, mofu, lofu, globe } }
   IF.js           — IF(cond).then(fn, ...args) flow control
 

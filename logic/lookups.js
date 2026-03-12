@@ -29,6 +29,8 @@ lookups.realmnum = function (spherename) {
     return sigs.null("realmnum not found for " + spherename)
 }
 
+
+
 // cache any dna with a buffgit into the nested lookup
 // returns a function bound to the dna (factory pattern for zell init)
 lookups.cache = function (dna) {

@@ -1,4 +1,4 @@
 
-const conops = ["@", "!", ".", ":", "+", "~", "°", "/"]
+const conops = ["@", "!", ".", ":", "+", "~", "°", "/", "☷"]
 
 module.exports = conops

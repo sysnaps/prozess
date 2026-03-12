@@ -1,8 +1,16 @@
-const hyph = require("./hyph")
+const { hyph, chicken } = require("./hyph")
 const { collection } = require("./collection")
 
-const egg = {}
+let egg = {}
 const eggs = {}
+
+eggs.hydrate = function (zells) {
+    return function (wdna) {
+        wdna.zell = wdna.zell || "well"
+        wdna.well = wdna.well || wdna.tofu || "fofu"
+        zells.init(wdna)
+    }
+}
 
 eggs.midwells = {}
 // hydrate a well's midwells collection — collection() walks and loads each child
@@ -20,15 +28,16 @@ eggs.midwells.hydrate = function (welldata, wellfn) {
     })
 }
 
+eggs.eggistry = function () {
+
+}
+
 eggs.init = function () {
-    const { well } = require("./wells")
-
-    let eggdna = hyph.get(".egg")
-    if (!eggdna) {
-        console.log("egg: no .egg found")
-        return
-    }
-
+    const { zells } = require("./zells")
+    let eggdna = hyph.get("%.egg")
+    egg = collection(eggdna)
+    console.log('eggdna - ', eggdna)
+    return
     // egg becomes the collection (mutate in place to keep reference)
     Object.assign(egg, eggdna)
 
@@ -41,10 +50,11 @@ eggs.init = function () {
     collection(egg)
 
     // hydrate each loaded well and its midwells
+    let hydrate = eggs.hydrate(zells)
     egg.each((welldata) => {
         if (typeof welldata === "string") return
-        eggs.midwells.hydrate(welldata, well)
-        well(welldata)
+        eggs.midwells.hydrate(welldata, hydrate)
+        hydrate(welldata)
     })
 
     const lookups = require("./lookups")
@@ -57,48 +67,58 @@ eggs.init = function () {
 }
 
 // create conop root structures for the route walker
-// egg["~"].default = default ring realm (strands)
-// egg[":"] = cosmos root (zones' mofu spaces)
+// egg["~"] = strands root (ring reference)
+// egg["☷"] = irlinks root (globe reference)
 // egg["°"] = groups root (irlinks mofu)
-// egg["@"] = lofu root (irlinks entities)
-// egg.default = default globe realm (irlinks)
+// cosmos lives on each zone's realm: egg["~"][zone][realm][":"]
 eggs.roots = function (e) {
     eggs.roots.strands(e)
     eggs.roots.irlinks(e)
-    eggs.roots.cosmos(e)
     eggs.roots.groups(e)
-    eggs.roots.lofu(e)
+    if (!e.megas) e.megas = {}
 }
 
 eggs.roots.strands = function (e) {
     if (!e["~"]) e["~"] = {}
     let ring = e["default ring"]
-    if (!e["~"].default) e["~"].default = {}
-    e["~"].default.zell = "realm"
-    if (ring) e["~"].default.ring = ring
-    let { zells } = require("./zells")
-    zells.init(e["~"].default)
+    // bootstrap: create a default ring if none loaded from chicken
+    if (!ring) {
+        let { rings } = require("./rings")
+        ring = rings.create({ concept: "default ring" })
+        e["default ring"] = ring
+    }
+    e["~"].ring = ring
 }
 
 eggs.roots.irlinks = function (e) {
     let globe = e["default globe"]
-    if (!e.default) e.default = {}
-    if (globe) e.default.globe = globe
+    // bootstrap: create a default globe if none loaded from chicken
+    if (!globe) {
+        globe = { concept: "default globe", globenum: 1 }
+        e["default globe"] = globe
+    }
+    // globe is a well — owns 900000 unschärfe, distributes among continents
+    eggs.roots.irlinks.globe(globe)
+    if (!e["☷"]) e["☷"] = {}
+    e["☷"].globe = globe
 }
 
-eggs.roots.cosmos = function (e) {
-    if (!e[":"]) e[":"] = {}
-    e[":"].zell = "cosmos"
+eggs.roots.irlinks.globe = function (globe) {
+    if (globe._zinit) return
+    globe.zell = globe.zell || "well"
+    globe.well = globe.well || "fofu"
+    globe.tofu = globe.tofu || "fofu"
+    globe.is = globe.is || "irlink"
+    globe.minwell = globe.minwell ?? 0
+    globe.maxwell = globe.maxwell ?? 900000
+    globe.unschärfe = globe.unschärfe ?? 900000
+    if (!globe.midwells) globe.midwells = { items: [] }
     let { zells } = require("./zells")
-    zells.init(e[":"])
+    zells.init(globe)
 }
 
 eggs.roots.groups = function (e) {
     if (!e["°"]) e["°"] = {}
-}
-
-eggs.roots.lofu = function (e) {
-    if (!e["@"]) e["@"] = {}
 }
 
 module.exports = { eggs, egg }

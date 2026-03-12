@@ -1,0 +1,17 @@
+D:\prozess\logic\egg.js:83
+    if (!e["~"]) e["~"] = {}
+          ^
+
+TypeError: Cannot read properties of null (reading '~')
+    at eggs.roots.strands (D:\prozess\logic\egg.js:83:11)
+    at eggs.roots (D:\prozess\logic\egg.js:76:16)
+    at eggs.init (D:\prozess\logic\egg.js:38:14)
+    at Object.<anonymous> (D:\prozess\prozess.js:22:6)
+    at Module._compile (node:internal/modules/cjs/loader:1688:14)
+    at Object..js (node:internal/modules/cjs/loader:1820:10)
+    at Module.load (node:internal/modules/cjs/loader:1423:32)
+    at Function._load (node:internal/modules/cjs/loader:1246:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+
+Node.js v22.18.0

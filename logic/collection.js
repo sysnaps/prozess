@@ -17,15 +17,20 @@ function collection(cdna) {
 }
 
 const collections = {}
-
-collections.create = function (title, maps, items) {
-    return collection({
-        "unit": "collection",
-        "collection": title,
-        "maps": maps,
-        "items": items ?? [],
-        "refs": true
+const version = 1
+collections.create = function (title, takes, kind = "peers") {
+    const cdna = collection({
+        version,
+        unit: "collection",
+        collection: kind,
+        [kind]: title,
+        takes,
+        items: [],
     })
+    cdna[takes] = items
+    // so we can have a generic items for internal processes but the user can access the items via the takes property
+    // and takes is the class constructor of those items !you'll see
+    return collection(cdna)
 }
 
 collection.count = function (items) {
@@ -120,24 +125,8 @@ collection.walk = function (cdnas) {
 }
 
 collection.attach = function (cdnas) {
-    return (dna, index) => {
-        if (typeof dna === "string") {
-            if (cdnas.maps === "link") {
-                cdnas[dna] = dna
-                return
-            }
-            let loaded = cdnas.walk(dna)
-            if (loaded && typeof loaded !== "string") {
-                let key = loaded[cdnas.maps] ?? index
-                cdnas[key] = loaded
-            }
-        } else {
-            let key = dna[cdnas.maps] ?? index
-            cdnas[key] = dna
-            // replace string ref in items with the actual object
-            let str = cdnas.items.indexOf(key)
-            if (str !== -1) cdnas.items[str] = dna
-        }
+    return (irlink) => {
+
     }
 }
 

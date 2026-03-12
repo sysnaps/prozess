@@ -48,7 +48,7 @@ function step(current, concept, chick, signal, wells, well, tofu) {
 
     // not in egg, not in chicken — create it
     console.log("walk: creating", concept, "at depth", chick.file)
-    let created = wells.first(signal.is, concept, null, null,
+    let created = wells.create(signal.is, concept, null, null,
         collections.create(concept + ".midwells", "concept"), tofu)
     zells.stamp(created)(chick.file)
     current.midwells.add(created)
